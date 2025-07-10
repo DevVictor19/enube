@@ -30,7 +30,7 @@ func getPartnerSk(row []string) int {
 			partnerSequence,
 			partnerId,
 			partnerName,
-			mpnId,
+			toNullableInt64(mpnId),
 			invoiceNumber,
 		)
 

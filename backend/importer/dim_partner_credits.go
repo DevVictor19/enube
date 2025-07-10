@@ -28,8 +28,8 @@ func getPartnerCreditSk(row []string) int {
 			partnerCreditValues,
 			partnerCreditSequence,
 			creditType,
-			percentage,
-			partnerEarnedPercentage,
+			toNullableFloat64(percentage),
+			toNullableFloat64(partnerEarnedPercentage),
 		)
 
 		return partnerCreditSequence

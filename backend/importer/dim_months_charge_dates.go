@@ -30,8 +30,8 @@ func getMonthsChargeDateSk(row []string) int {
 		monthsChargeDateValues = append(
 			monthsChargeDateValues,
 			monthsChargeDateSequence,
-			chargeStartDate,
-			chargeEndDate,
+			toNullableDate(chargeStartDate),
+			toNullableDate(chargeEndDate),
 		)
 
 		return monthsChargeDateSequence

@@ -33,7 +33,7 @@ func getCustomerSk(row []string) int {
 			customerName,
 			customerDomain,
 			customerCountry,
-			tier2MpnId,
+			toNullableInt64(tier2MpnId),
 		)
 
 		return customerSequence
