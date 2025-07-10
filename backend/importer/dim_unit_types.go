@@ -13,6 +13,10 @@ func getUnitTypeSk(row []string) int {
 
 	unitType := row[unitTypeIndex]
 
+	if unitType == "" {
+		return 0
+	}
+
 	existentSequence, ok := unitTypes[unitType]
 	if !ok {
 		unitTypeSequence++
@@ -38,4 +42,8 @@ func getUnitTypeStm() string {
 	}
 	totalVals := len(unitTypeValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetUnitTypeValues() {
+	unitTypeValues = nil
 }

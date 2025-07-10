@@ -19,6 +19,10 @@ func getMeterSk(row []string) int {
 	region := row[meterRegionIndex]
 	unit := row[meterUnitIndex]
 
+	if meterId == "" {
+		return 0
+	}
+
 	existentSequence, ok := meters[meterId]
 	if !ok {
 		meterSequence++
@@ -56,4 +60,8 @@ func getMeterStm() string {
 	}
 	totalVals := len(meterValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetMeterValues() {
+	meterValues = nil
 }

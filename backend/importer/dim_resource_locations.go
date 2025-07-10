@@ -13,6 +13,10 @@ func getResourceLocationSk(row []string) int {
 
 	location := row[resourceLocationIndex]
 
+	if location == "" {
+		return 0
+	}
+
 	existentSequence, ok := resourceLocations[location]
 	if !ok {
 		resourceLocationSequence++
@@ -38,4 +42,8 @@ func getResourceLocationStm() string {
 	}
 	totalVals := len(resourceLocationValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetResourceLocationValues() {
+	resourceLocationValues = nil
 }

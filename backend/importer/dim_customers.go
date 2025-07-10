@@ -2,7 +2,7 @@ package importer
 
 var (
 	customerSequence = 0
-	customers        map[string]int // customerId | sk
+	customers        map[string]int
 	customerValues   []any
 )
 
@@ -16,6 +16,10 @@ func getCustomerSk(row []string) int {
 	customerDomain := row[customerDomainNameIndex]
 	customerCountry := row[customerCountryIndex]
 	tier2MpnId := row[tier2MpnIdIndex]
+
+	if customerId == "" {
+		return 0
+	}
 
 	existentSequence, ok := customers[customerId]
 	if !ok {
@@ -50,4 +54,8 @@ func getCustomerStm() string {
 	}
 	totalVals := len(customerValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetCustomerValues() {
+	customerValues = nil
 }

@@ -14,6 +14,10 @@ func getSubscriptionSk(row []string) int {
 	subscriptionId := row[subscriptionIdIndex]
 	description := row[subscriptionDescriptionIndex]
 
+	if subscriptionId == "" {
+		return 0
+	}
+
 	existentSequence, ok := subscriptions[subscriptionId]
 	if !ok {
 		subscriptionSequence++
@@ -41,4 +45,8 @@ func getSubscriptionStm() string {
 	}
 	totalVals := len(subscriptionValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetSubscriptionValues() {
+	subscriptionValues = nil
 }

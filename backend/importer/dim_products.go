@@ -14,6 +14,10 @@ func getProductSk(row []string) int {
 	productId := row[productIdIndex]
 	productName := row[productNameIndex]
 
+	if productId == "" {
+		return 0
+	}
+
 	existentSequence, ok := products[productId]
 	if !ok {
 		productSequence++
@@ -41,4 +45,8 @@ func getProductStm() string {
 	}
 	totalVals := len(productValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetProductValues() {
+	productValues = nil
 }

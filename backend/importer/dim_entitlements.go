@@ -14,6 +14,10 @@ func getEntitlementSk(row []string) int {
 	entitlementId := row[entitlementIdIndex]
 	description := row[entitlementDescriptionIndex]
 
+	if entitlementId == "" {
+		return 0
+	}
+
 	existentSequence, ok := entitlements[entitlementId]
 	if !ok {
 		entitlementSequence++
@@ -41,4 +45,8 @@ func getEntitlementStm() string {
 	}
 	totalVals := len(entitlementValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetEntitlementValues() {
+	entitlementValues = nil
 }

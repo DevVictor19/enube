@@ -13,6 +13,10 @@ func getChargeTypeSk(row []string) int {
 
 	chargeType := row[chargeTypeIndex]
 
+	if chargeType == "" {
+		return 0
+	}
+
 	existentSequence, ok := chargeTypes[chargeType]
 	if !ok {
 		chargeTypeSequence++
@@ -38,4 +42,8 @@ func getChargeTypeStm() string {
 	}
 	totalVals := len(chargeTypeValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetChargeTypeValues() {
+	chargeTypeValues = nil
 }

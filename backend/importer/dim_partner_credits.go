@@ -15,6 +15,10 @@ func getPartnerCreditSk(row []string) int {
 	percentage := row[creditPercentageIndex]
 	partnerEarnedPercentage := row[partnerEarnedCreditPercentageIndex]
 
+	if creditType == "" {
+		return 0
+	}
+
 	existentSequence, ok := partnerCredits[creditType]
 	if !ok {
 		partnerCreditSequence++
@@ -44,4 +48,8 @@ func getPartnerCreditStm() string {
 	}
 	totalVals := len(partnerCreditValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetPartnerCreditValues() {
+	partnerCreditValues = nil
 }

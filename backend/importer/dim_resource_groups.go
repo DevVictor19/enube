@@ -13,6 +13,10 @@ func getResourceGroupSk(row []string) int {
 
 	name := row[resourceGroupIndex]
 
+	if name == "" {
+		return 0
+	}
+
 	existentSequence, ok := resourceGroups[name]
 	if !ok {
 		resourceGroupSequence++
@@ -38,4 +42,8 @@ func getResourceGroupStm() string {
 	}
 	totalVals := len(resourceGroupValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetResourceGroupValues() {
+	resourceGroupValues = nil
 }

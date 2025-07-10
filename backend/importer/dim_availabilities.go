@@ -13,6 +13,10 @@ func getAvailabilitySk(row []string) int {
 
 	availabilityId := row[availabilityIdIndex]
 
+	if availabilityId == "" {
+		return 0
+	}
+
 	existentSequence, ok := availabilities[availabilityId]
 	if !ok {
 		availabilitySequence++
@@ -38,4 +42,8 @@ func getAvailabilityStm() string {
 	}
 	totalVals := len(availabilityValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetAvailabilityValues() {
+	availabilityValues = nil
 }

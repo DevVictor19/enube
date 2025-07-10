@@ -14,6 +14,10 @@ func getPublisherSk(row []string) int {
 	publisherId := row[publisherIdIndex]
 	publisherName := row[publisherNameIndex]
 
+	if publisherId == "" {
+		return 0
+	}
+
 	existentSequence, ok := publishers[publisherId]
 	if !ok {
 		publisherSequence++
@@ -41,4 +45,8 @@ func getPublisherStm() string {
 	}
 	totalVals := len(publisherValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetPublisherValues() {
+	publisherValues = nil
 }

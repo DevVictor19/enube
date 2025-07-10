@@ -16,6 +16,10 @@ func getMonthsChargeDateSk(row []string) int {
 	chargeStartDate := row[chargeStartDateIndex]
 	chargeEndDate := row[chargeEndDateIndex]
 
+	if chargeStartDate == "" || chargeEndDate == "" {
+		return 0
+	}
+
 	key := fmt.Sprintf("%s|%s", chargeStartDate, chargeEndDate)
 
 	existentSequence, ok := monthsChargeDates[key]
@@ -45,4 +49,8 @@ func getMonthsChargeDateStm() string {
 	}
 	totalVals := len(monthsChargeDateValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetMonthsChargeDateValues() {
+	monthsChargeDateValues = nil
 }

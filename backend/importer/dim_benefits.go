@@ -14,6 +14,10 @@ func getBenefitSk(row []string) int {
 	benefitId := row[benefitIdIndex]
 	benefitType := row[benefitTypeIndex]
 
+	if benefitId == "" {
+		return 0
+	}
+
 	existentSequence, ok := benefits[benefitId]
 	if !ok {
 		benefitSequence++
@@ -41,4 +45,8 @@ func getBenefitStm() string {
 	}
 	totalVals := len(benefitValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetBenefitValues() {
+	benefitValues = nil
 }

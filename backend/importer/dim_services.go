@@ -13,6 +13,10 @@ func getServiceSk(row []string) int {
 
 	service := row[consumedServiceIndex]
 
+	if service == "" {
+		return 0
+	}
+
 	existentSequence, ok := services[service]
 	if !ok {
 		serviceSequence++
@@ -38,4 +42,8 @@ func getServiceStm() string {
 	}
 	totalVals := len(serviceValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetServiceValues() {
+	serviceValues = nil
 }

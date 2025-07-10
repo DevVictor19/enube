@@ -14,6 +14,10 @@ func getSkuSk(row []string) int {
 	skuId := row[skuIdIndex]
 	skuName := row[skuNameIndex]
 
+	if skuId == "" {
+		return 0
+	}
+
 	existentSequence, ok := skus[skuId]
 	if !ok {
 		skuSequence++
@@ -41,4 +45,8 @@ func getSkuStm() string {
 	}
 	totalVals := len(skuValues)
 	return buildBatchInsert(table, cols, totalVals)
+}
+
+func resetSkuValues() {
+	skuValues = nil
 }
