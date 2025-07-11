@@ -33,7 +33,7 @@ CREATE TABLE fact_charges (
     pc_to_bc_exchange_rate_date DATE,
     service_info_1 VARCHAR,
     service_info_2 VARCHAR,
-    tags JSON,
-    additional_info JSON
+    tags VARCHAR,
+    additional_info VARCHAR
 );
 
