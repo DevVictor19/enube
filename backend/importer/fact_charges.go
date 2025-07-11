@@ -38,7 +38,7 @@ func consumeChargeFacts(row []string) {
 		getChargeTypeSk(row),
 		getUnitTypeSk(row),
 		getEntitlementSk(row),
-		getPartnerSk(row),
+		getPartnerCreditSk(row),
 		getBenefitSk(row),
 		getBenefitOrderSk(row),
 		getAvailabilitySk(row),
