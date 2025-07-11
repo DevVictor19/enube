@@ -17,11 +17,13 @@ func buildBatchInsert(tableName string, columns []string, totalValues int) strin
 	builder.WriteString(tableName)
 	builder.WriteString(fmt.Sprintf(" (%s) VALUES ", strings.Join(columns, ", ")))
 
+	paramIndex := 1
+
 	for i := 0; i < rows; i++ {
 		builder.WriteString("(")
 		for j := 0; j < len(columns); j++ {
-			paramIndex := i*len(columns) + j + 1
 			builder.WriteString(fmt.Sprintf("$%d", paramIndex))
+			paramIndex++
 			if j < len(columns)-1 {
 				builder.WriteString(", ")
 			}
