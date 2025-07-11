@@ -6,7 +6,7 @@ var (
 	resourceLocationValues   []any
 )
 
-func getResourceLocationSk(row []string) int {
+func getResourceLocationSk(row []string) *int {
 	if resourceLocations == nil {
 		resourceLocations = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getResourceLocationSk(row []string) int {
 	location := row[resourceLocationIndex]
 
 	if location == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := resourceLocations[location]
@@ -28,10 +28,10 @@ func getResourceLocationSk(row []string) int {
 			location,
 		)
 
-		return resourceLocationSequence
+		return &resourceLocationSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getResourceLocationStm() string {

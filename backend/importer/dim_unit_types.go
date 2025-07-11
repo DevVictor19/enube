@@ -6,7 +6,7 @@ var (
 	unitTypeValues   []any
 )
 
-func getUnitTypeSk(row []string) int {
+func getUnitTypeSk(row []string) *int {
 	if unitTypes == nil {
 		unitTypes = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getUnitTypeSk(row []string) int {
 	unitType := row[unitTypeIndex]
 
 	if unitType == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := unitTypes[unitType]
@@ -28,10 +28,10 @@ func getUnitTypeSk(row []string) int {
 			unitType,
 		)
 
-		return unitTypeSequence
+		return &unitTypeSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getUnitTypeStm() string {

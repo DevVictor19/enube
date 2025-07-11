@@ -6,7 +6,7 @@ var (
 	chargeTypeValues   []any
 )
 
-func getChargeTypeSk(row []string) int {
+func getChargeTypeSk(row []string) *int {
 	if chargeTypes == nil {
 		chargeTypes = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getChargeTypeSk(row []string) int {
 	chargeType := row[chargeTypeIndex]
 
 	if chargeType == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := chargeTypes[chargeType]
@@ -28,10 +28,10 @@ func getChargeTypeSk(row []string) int {
 			chargeType,
 		)
 
-		return chargeTypeSequence
+		return &chargeTypeSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getChargeTypeStm() string {

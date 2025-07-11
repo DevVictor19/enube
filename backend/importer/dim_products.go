@@ -6,7 +6,7 @@ var (
 	productValues   []any
 )
 
-func getProductSk(row []string) int {
+func getProductSk(row []string) *int {
 	if products == nil {
 		products = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getProductSk(row []string) int {
 	productName := row[productNameIndex]
 
 	if productId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := products[productId]
@@ -30,10 +30,10 @@ func getProductSk(row []string) int {
 			productName,
 		)
 
-		return productSequence
+		return &productSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getProductStm() string {

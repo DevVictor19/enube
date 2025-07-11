@@ -6,7 +6,7 @@ var (
 	serviceValues   []any
 )
 
-func getServiceSk(row []string) int {
+func getServiceSk(row []string) *int {
 	if services == nil {
 		services = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getServiceSk(row []string) int {
 	service := row[consumedServiceIndex]
 
 	if service == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := services[service]
@@ -28,10 +28,10 @@ func getServiceSk(row []string) int {
 			service,
 		)
 
-		return serviceSequence
+		return &serviceSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getServiceStm() string {

@@ -6,7 +6,7 @@ var (
 	resourceGroupValues   []any
 )
 
-func getResourceGroupSk(row []string) int {
+func getResourceGroupSk(row []string) *int {
 	if resourceGroups == nil {
 		resourceGroups = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getResourceGroupSk(row []string) int {
 	name := row[resourceGroupIndex]
 
 	if name == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := resourceGroups[name]
@@ -28,10 +28,10 @@ func getResourceGroupSk(row []string) int {
 			name,
 		)
 
-		return resourceGroupSequence
+		return &resourceGroupSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getResourceGroupStm() string {

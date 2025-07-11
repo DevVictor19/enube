@@ -6,7 +6,7 @@ var (
 	partnerCreditValues   []any
 )
 
-func getPartnerCreditSk(row []string) int {
+func getPartnerCreditSk(row []string) *int {
 	if partnerCredits == nil {
 		partnerCredits = make(map[string]int)
 	}
@@ -16,7 +16,7 @@ func getPartnerCreditSk(row []string) int {
 	partnerEarnedPercentage := row[partnerEarnedCreditPercentageIndex]
 
 	if creditType == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := partnerCredits[creditType]
@@ -32,10 +32,10 @@ func getPartnerCreditSk(row []string) int {
 			toNullableFloat64(partnerEarnedPercentage),
 		)
 
-		return partnerCreditSequence
+		return &partnerCreditSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getPartnerCreditStm() string {

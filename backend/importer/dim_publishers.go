@@ -6,7 +6,7 @@ var (
 	publisherValues   []any
 )
 
-func getPublisherSk(row []string) int {
+func getPublisherSk(row []string) *int {
 	if publishers == nil {
 		publishers = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getPublisherSk(row []string) int {
 	publisherName := row[publisherNameIndex]
 
 	if publisherId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := publishers[publisherId]
@@ -30,10 +30,10 @@ func getPublisherSk(row []string) int {
 			publisherName,
 		)
 
-		return publisherSequence
+		return &publisherSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getPublisherStm() string {

@@ -6,7 +6,7 @@ var (
 	partnerValues   []any
 )
 
-func getPartnerSk(row []string) int {
+func getPartnerSk(row []string) *int {
 	if partners == nil {
 		partners = make(map[string]int)
 	}
@@ -17,7 +17,7 @@ func getPartnerSk(row []string) int {
 	invoiceNumber := row[invoiceNumberIndex]
 
 	if partnerId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := partners[partnerId]
@@ -34,10 +34,10 @@ func getPartnerSk(row []string) int {
 			invoiceNumber,
 		)
 
-		return partnerSequence
+		return &partnerSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getPartnerStm() string {

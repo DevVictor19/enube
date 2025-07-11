@@ -6,7 +6,7 @@ var (
 	benefitValues   []any
 )
 
-func getBenefitSk(row []string) int {
+func getBenefitSk(row []string) *int {
 	if benefits == nil {
 		benefits = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getBenefitSk(row []string) int {
 	benefitType := row[benefitTypeIndex]
 
 	if benefitId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := benefits[benefitId]
@@ -30,10 +30,10 @@ func getBenefitSk(row []string) int {
 			benefitType,
 		)
 
-		return benefitSequence
+		return &benefitSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getBenefitStm() string {

@@ -6,7 +6,7 @@ var (
 	customerValues   []any
 )
 
-func getCustomerSk(row []string) int {
+func getCustomerSk(row []string) *int {
 	if customers == nil {
 		customers = make(map[string]int)
 	}
@@ -18,7 +18,7 @@ func getCustomerSk(row []string) int {
 	tier2MpnId := row[tier2MpnIdIndex]
 
 	if customerId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := customers[customerId]
@@ -36,10 +36,10 @@ func getCustomerSk(row []string) int {
 			toNullableInt64(tier2MpnId),
 		)
 
-		return customerSequence
+		return &customerSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getCustomerStm() string {

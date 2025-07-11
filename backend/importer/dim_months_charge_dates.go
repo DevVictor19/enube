@@ -8,7 +8,7 @@ var (
 	monthsChargeDateValues   []any
 )
 
-func getMonthsChargeDateSk(row []string) int {
+func getMonthsChargeDateSk(row []string) *int {
 	if monthsChargeDates == nil {
 		monthsChargeDates = make(map[string]int)
 	}
@@ -17,7 +17,7 @@ func getMonthsChargeDateSk(row []string) int {
 	chargeEndDate := row[chargeEndDateIndex]
 
 	if chargeStartDate == "" || chargeEndDate == "" {
-		return 0
+		return nil
 	}
 
 	key := fmt.Sprintf("%s|%s", chargeStartDate, chargeEndDate)
@@ -34,10 +34,10 @@ func getMonthsChargeDateSk(row []string) int {
 			toNullableDate(chargeEndDate),
 		)
 
-		return monthsChargeDateSequence
+		return &monthsChargeDateSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getMonthsChargeDateStm() string {

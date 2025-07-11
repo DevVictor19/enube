@@ -6,7 +6,7 @@ var (
 	availabilityValues   []any
 )
 
-func getAvailabilitySk(row []string) int {
+func getAvailabilitySk(row []string) *int {
 	if availabilities == nil {
 		availabilities = make(map[string]int)
 	}
@@ -14,7 +14,7 @@ func getAvailabilitySk(row []string) int {
 	availabilityId := row[availabilityIdIndex]
 
 	if availabilityId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := availabilities[availabilityId]
@@ -28,10 +28,10 @@ func getAvailabilitySk(row []string) int {
 			availabilityId,
 		)
 
-		return availabilitySequence
+		return &availabilitySequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getAvailabilityStm() string {

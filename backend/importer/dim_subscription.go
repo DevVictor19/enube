@@ -6,7 +6,7 @@ var (
 	subscriptionValues   []any
 )
 
-func getSubscriptionSk(row []string) int {
+func getSubscriptionSk(row []string) *int {
 	if subscriptions == nil {
 		subscriptions = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getSubscriptionSk(row []string) int {
 	description := row[subscriptionDescriptionIndex]
 
 	if subscriptionId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := subscriptions[subscriptionId]
@@ -30,10 +30,10 @@ func getSubscriptionSk(row []string) int {
 			description,
 		)
 
-		return subscriptionSequence
+		return &subscriptionSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getSubscriptionStm() string {

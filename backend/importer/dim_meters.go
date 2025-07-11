@@ -6,7 +6,7 @@ var (
 	meterValues   []any
 )
 
-func getMeterSk(row []string) int {
+func getMeterSk(row []string) *int {
 	if meters == nil {
 		meters = make(map[string]int)
 	}
@@ -20,7 +20,7 @@ func getMeterSk(row []string) int {
 	unit := row[meterUnitIndex]
 
 	if meterId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := meters[meterId]
@@ -40,10 +40,10 @@ func getMeterSk(row []string) int {
 			unit,
 		)
 
-		return meterSequence
+		return &meterSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getMeterStm() string {

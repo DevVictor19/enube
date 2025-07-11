@@ -6,7 +6,7 @@ var (
 	entitlementValues   []any
 )
 
-func getEntitlementSk(row []string) int {
+func getEntitlementSk(row []string) *int {
 	if entitlements == nil {
 		entitlements = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getEntitlementSk(row []string) int {
 	description := row[entitlementDescriptionIndex]
 
 	if entitlementId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := entitlements[entitlementId]
@@ -30,10 +30,10 @@ func getEntitlementSk(row []string) int {
 			description,
 		)
 
-		return entitlementSequence
+		return &entitlementSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getEntitlementStm() string {

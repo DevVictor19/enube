@@ -6,7 +6,7 @@ var (
 	skuValues   []any
 )
 
-func getSkuSk(row []string) int {
+func getSkuSk(row []string) *int {
 	if skus == nil {
 		skus = make(map[string]int)
 	}
@@ -15,7 +15,7 @@ func getSkuSk(row []string) int {
 	skuName := row[skuNameIndex]
 
 	if skuId == "" {
-		return 0
+		return nil
 	}
 
 	existentSequence, ok := skus[skuId]
@@ -30,10 +30,10 @@ func getSkuSk(row []string) int {
 			skuName,
 		)
 
-		return skuSequence
+		return &skuSequence
 	}
 
-	return existentSequence
+	return &existentSequence
 }
 
 func getSkuStm() string {
