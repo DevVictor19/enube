@@ -12,7 +12,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-const batchSize = 1500
+const rowsLimitPerBatch = 1500
 
 func StartImports() {
 	start := time.Now()
@@ -57,7 +57,7 @@ func StartImports() {
 			log.Fatal(err)
 		}
 
-		if rowsToInsert == batchSize {
+		if rowsToInsert == rowsLimitPerBatch {
 			fmt.Printf("Starting batch insert of %d rows\n", rowsToInsert)
 			wg.Add(1)
 			rowsToInsert = 0
