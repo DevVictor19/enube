@@ -2,7 +2,6 @@ package importer
 
 import (
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -32,20 +31,10 @@ func toNullableDate(s string) *time.Time {
 	if s == "" {
 		return nil
 	}
-
-	parts := strings.Split(s, "/")
-	if len(parts) != 3 {
+	layout := "02-01-06"
+	t, err := time.Parse(layout, s)
+	if err != nil {
 		return nil
 	}
-
-	mes, err1 := strconv.Atoi(parts[0])
-	dia, err2 := strconv.Atoi(parts[1])
-	ano, err3 := strconv.Atoi(parts[2])
-
-	if err1 != nil || err2 != nil || err3 != nil {
-		return nil
-	}
-
-	t := time.Date(ano, time.Month(mes), dia, 0, 0, 0, 0, time.UTC)
 	return &t
 }
