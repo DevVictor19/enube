@@ -12,7 +12,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-const batchSize = 1000
+const batchSize = 1500
 
 func StartImports() {
 	var memStats runtime.MemStats
