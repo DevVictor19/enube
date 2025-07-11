@@ -7,15 +7,15 @@ var (
 )
 
 func getSubscriptionSk(row []string) *int {
-	if subscriptions == nil {
-		subscriptions = make(map[string]int)
-	}
-
 	subscriptionId := row[subscriptionIdIndex]
 	description := row[subscriptionDescriptionIndex]
 
 	if subscriptionId == "" {
 		return nil
+	}
+
+	if subscriptions == nil {
+		subscriptions = make(map[string]int)
 	}
 
 	existentSequence, ok := subscriptions[subscriptionId]

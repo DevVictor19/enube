@@ -7,10 +7,6 @@ var (
 )
 
 func getPartnerSk(row []string) *int {
-	if partners == nil {
-		partners = make(map[string]int)
-	}
-
 	partnerId := row[partnerIdIndex]
 	partnerName := row[partnerNameIndex]
 	mpnId := row[mpnIdIndex]
@@ -18,6 +14,10 @@ func getPartnerSk(row []string) *int {
 
 	if partnerId == "" {
 		return nil
+	}
+
+	if partners == nil {
+		partners = make(map[string]int)
 	}
 
 	existentSequence, ok := partners[partnerId]

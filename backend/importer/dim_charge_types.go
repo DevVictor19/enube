@@ -7,14 +7,14 @@ var (
 )
 
 func getChargeTypeSk(row []string) *int {
-	if chargeTypes == nil {
-		chargeTypes = make(map[string]int)
-	}
-
 	chargeType := row[chargeTypeIndex]
 
 	if chargeType == "" {
 		return nil
+	}
+
+	if chargeTypes == nil {
+		chargeTypes = make(map[string]int)
 	}
 
 	existentSequence, ok := chargeTypes[chargeType]

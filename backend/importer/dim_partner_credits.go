@@ -7,16 +7,16 @@ var (
 )
 
 func getPartnerCreditSk(row []string) *int {
-	if partnerCredits == nil {
-		partnerCredits = make(map[string]int)
-	}
-
 	creditType := row[creditTypeIndex]
 	percentage := row[creditPercentageIndex]
 	partnerEarnedPercentage := row[partnerEarnedCreditPercentageIndex]
 
 	if creditType == "" {
 		return nil
+	}
+
+	if partnerCredits == nil {
+		partnerCredits = make(map[string]int)
 	}
 
 	existentSequence, ok := partnerCredits[creditType]

@@ -7,14 +7,14 @@ var (
 )
 
 func getUnitTypeSk(row []string) *int {
-	if unitTypes == nil {
-		unitTypes = make(map[string]int)
-	}
-
 	unitType := row[unitTypeIndex]
 
 	if unitType == "" {
 		return nil
+	}
+
+	if unitTypes == nil {
+		unitTypes = make(map[string]int)
 	}
 
 	existentSequence, ok := unitTypes[unitType]

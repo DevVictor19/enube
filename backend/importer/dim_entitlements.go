@@ -7,15 +7,15 @@ var (
 )
 
 func getEntitlementSk(row []string) *int {
-	if entitlements == nil {
-		entitlements = make(map[string]int)
-	}
-
 	entitlementId := row[entitlementIdIndex]
 	description := row[entitlementDescriptionIndex]
 
 	if entitlementId == "" {
 		return nil
+	}
+
+	if entitlements == nil {
+		entitlements = make(map[string]int)
 	}
 
 	existentSequence, ok := entitlements[entitlementId]

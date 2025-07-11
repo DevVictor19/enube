@@ -9,15 +9,15 @@ var (
 )
 
 func getMonthsChargeDateSk(row []string) *int {
-	if monthsChargeDates == nil {
-		monthsChargeDates = make(map[string]int)
-	}
-
 	chargeStartDate := row[chargeStartDateIndex]
 	chargeEndDate := row[chargeEndDateIndex]
 
 	if chargeStartDate == "" || chargeEndDate == "" {
 		return nil
+	}
+
+	if monthsChargeDates == nil {
+		monthsChargeDates = make(map[string]int)
 	}
 
 	key := fmt.Sprintf("%s|%s", chargeStartDate, chargeEndDate)

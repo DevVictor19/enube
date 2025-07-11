@@ -7,14 +7,14 @@ var (
 )
 
 func getServiceSk(row []string) *int {
-	if services == nil {
-		services = make(map[string]int)
-	}
-
 	service := row[consumedServiceIndex]
 
 	if service == "" {
 		return nil
+	}
+
+	if services == nil {
+		services = make(map[string]int)
 	}
 
 	existentSequence, ok := services[service]

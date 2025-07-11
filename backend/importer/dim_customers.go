@@ -7,10 +7,6 @@ var (
 )
 
 func getCustomerSk(row []string) *int {
-	if customers == nil {
-		customers = make(map[string]int)
-	}
-
 	customerId := row[customerIdIndex]
 	customerName := row[customerNameIndex]
 	customerDomain := row[customerDomainNameIndex]
@@ -19,6 +15,10 @@ func getCustomerSk(row []string) *int {
 
 	if customerId == "" {
 		return nil
+	}
+
+	if customers == nil {
+		customers = make(map[string]int)
 	}
 
 	existentSequence, ok := customers[customerId]

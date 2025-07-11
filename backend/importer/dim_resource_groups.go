@@ -7,14 +7,14 @@ var (
 )
 
 func getResourceGroupSk(row []string) *int {
-	if resourceGroups == nil {
-		resourceGroups = make(map[string]int)
-	}
-
 	name := row[resourceGroupIndex]
 
 	if name == "" {
 		return nil
+	}
+
+	if resourceGroups == nil {
+		resourceGroups = make(map[string]int)
 	}
 
 	existentSequence, ok := resourceGroups[name]

@@ -7,14 +7,14 @@ var (
 )
 
 func getAvailabilitySk(row []string) *int {
-	if availabilities == nil {
-		availabilities = make(map[string]int)
-	}
-
 	availabilityId := row[availabilityIdIndex]
 
 	if availabilityId == "" {
 		return nil
+	}
+
+	if availabilities == nil {
+		availabilities = make(map[string]int)
 	}
 
 	existentSequence, ok := availabilities[availabilityId]

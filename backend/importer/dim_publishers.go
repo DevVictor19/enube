@@ -7,15 +7,15 @@ var (
 )
 
 func getPublisherSk(row []string) *int {
-	if publishers == nil {
-		publishers = make(map[string]int)
-	}
-
 	publisherId := row[publisherIdIndex]
 	publisherName := row[publisherNameIndex]
 
 	if publisherId == "" {
 		return nil
+	}
+
+	if publishers == nil {
+		publishers = make(map[string]int)
 	}
 
 	existentSequence, ok := publishers[publisherId]

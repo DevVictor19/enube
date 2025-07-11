@@ -7,10 +7,6 @@ var (
 )
 
 func getMeterSk(row []string) *int {
-	if meters == nil {
-		meters = make(map[string]int)
-	}
-
 	meterId := row[meterIdIndex]
 	name := row[meterNameIndex]
 	category := row[meterCategoryIndex]
@@ -21,6 +17,10 @@ func getMeterSk(row []string) *int {
 
 	if meterId == "" {
 		return nil
+	}
+
+	if meters == nil {
+		meters = make(map[string]int)
 	}
 
 	existentSequence, ok := meters[meterId]

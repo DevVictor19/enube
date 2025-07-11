@@ -7,15 +7,15 @@ var (
 )
 
 func getSkuSk(row []string) *int {
-	if skus == nil {
-		skus = make(map[string]int)
-	}
-
 	skuId := row[skuIdIndex]
 	skuName := row[skuNameIndex]
 
 	if skuId == "" {
 		return nil
+	}
+
+	if skus == nil {
+		skus = make(map[string]int)
 	}
 
 	existentSequence, ok := skus[skuId]

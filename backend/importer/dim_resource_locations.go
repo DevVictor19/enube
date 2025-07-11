@@ -7,14 +7,14 @@ var (
 )
 
 func getResourceLocationSk(row []string) *int {
-	if resourceLocations == nil {
-		resourceLocations = make(map[string]int)
-	}
-
 	location := row[resourceLocationIndex]
 
 	if location == "" {
 		return nil
+	}
+
+	if resourceLocations == nil {
+		resourceLocations = make(map[string]int)
 	}
 
 	existentSequence, ok := resourceLocations[location]

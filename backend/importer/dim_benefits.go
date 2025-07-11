@@ -7,8 +7,8 @@ var (
 )
 
 func getBenefitSk(row []string) *int {
-	if benefits == nil {
-		benefits = make(map[string]int)
+	if len(row) < 54 {
+		return nil
 	}
 
 	benefitId := row[benefitIdIndex]
@@ -16,6 +16,10 @@ func getBenefitSk(row []string) *int {
 
 	if benefitId == "" {
 		return nil
+	}
+
+	if benefits == nil {
+		benefits = make(map[string]int)
 	}
 
 	existentSequence, ok := benefits[benefitId]
