@@ -1,4 +1,4 @@
-package importer
+package helpers
 
 import (
 	"database/sql"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func toNullableInt64(s string) sql.NullInt64 {
+func ToNullableInt64(s string) sql.NullInt64 {
 	if s == "" {
 		return sql.NullInt64{
 			Valid: false,
@@ -24,7 +24,7 @@ func toNullableInt64(s string) sql.NullInt64 {
 	}
 }
 
-func toNullableFloat64(s string) sql.NullFloat64 {
+func ToNullableFloat64(s string) sql.NullFloat64 {
 	if s == "" {
 		return sql.NullFloat64{
 			Valid: false,
@@ -42,7 +42,7 @@ func toNullableFloat64(s string) sql.NullFloat64 {
 	}
 }
 
-func toNullableDate(s string) sql.NullTime {
+func ToNullableDate(s string) sql.NullTime {
 	if s == "" {
 		return sql.NullTime{
 			Valid: false,

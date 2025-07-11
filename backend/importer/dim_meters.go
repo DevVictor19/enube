@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	meterSequence = 0
@@ -71,7 +75,7 @@ func getMeterStm() string {
 		"unit",
 	}
 	totalVals := len(meterValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetMeterValues() {

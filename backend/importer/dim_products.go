@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	productSequence = 0
@@ -56,7 +60,7 @@ func getProductStm() string {
 		"product_name",
 	}
 	totalVals := len(productValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetProductValues() {

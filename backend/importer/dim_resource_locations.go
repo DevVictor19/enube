@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	resourceLocationSequence = 0
@@ -53,7 +57,7 @@ func getResourceLocationStm() string {
 		"location",
 	}
 	totalVals := len(resourceLocationValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetResourceLocationValues() {

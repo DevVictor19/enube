@@ -3,6 +3,8 @@ package importer
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
 )
 
 var (
@@ -37,8 +39,8 @@ func getMonthsChargeDateSk(row []string) sql.NullInt32 {
 		monthsChargeDateValues = append(
 			monthsChargeDateValues,
 			monthsChargeDateSequence,
-			toNullableDate(chargeStartDate),
-			toNullableDate(chargeEndDate),
+			helpers.ToNullableDate(chargeStartDate),
+			helpers.ToNullableDate(chargeEndDate),
 		)
 
 		return sql.NullInt32{
@@ -61,7 +63,7 @@ func getMonthsChargeDateStm() string {
 		"charge_end_date",
 	}
 	totalVals := len(monthsChargeDateValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetMonthsChargeDateValues() {

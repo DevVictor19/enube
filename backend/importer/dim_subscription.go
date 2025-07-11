@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	subscriptionSequence = 0
@@ -54,7 +58,7 @@ func getSubscriptionStm() string {
 		"description",
 	}
 	totalVals := len(subscriptionValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetSubscriptionValues() {

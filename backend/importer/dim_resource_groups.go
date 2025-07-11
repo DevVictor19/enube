@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	resourceGroupSequence = 0
@@ -53,7 +57,7 @@ func getResourceGroupStm() string {
 		"name",
 	}
 	totalVals := len(resourceGroupValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetResourceGroupValues() {

@@ -1,11 +1,11 @@
-package importer
+package helpers
 
 import (
 	"fmt"
 	"strings"
 )
 
-func buildBatchInsert(tableName string, columns []string, totalValues int) string {
+func BuildBatchInsert(tableName string, columns []string, totalValues int) string {
 	if totalValues == 0 || len(columns) == 0 || totalValues%len(columns) != 0 {
 		return ""
 	}

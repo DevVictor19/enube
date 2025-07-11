@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	serviceSequence = 0
@@ -53,7 +57,7 @@ func getServiceStm() string {
 		"service",
 	}
 	totalVals := len(serviceValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetServiceValues() {

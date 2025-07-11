@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	customerSequence = 0
@@ -39,7 +43,7 @@ func getCustomerSk(row []string) sql.NullInt32 {
 			customerName,
 			customerDomain,
 			customerCountry,
-			toNullableInt64(tier2MpnId),
+			helpers.ToNullableInt64(tier2MpnId),
 		)
 
 		return sql.NullInt32{
@@ -65,7 +69,7 @@ func getCustomerStm() string {
 		"tier_2_mpn_id",
 	}
 	totalVals := len(customerValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetCustomerValues() {

@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	partnerCreditSequence = 0
@@ -34,8 +38,8 @@ func getPartnerCreditSk(row []string) sql.NullInt32 {
 			partnerCreditValues,
 			partnerCreditSequence,
 			creditType,
-			toNullableFloat64(percentage),
-			toNullableFloat64(partnerEarnedPercentage),
+			helpers.ToNullableFloat64(percentage),
+			helpers.ToNullableFloat64(partnerEarnedPercentage),
 		)
 
 		return sql.NullInt32{
@@ -59,7 +63,7 @@ func getPartnerCreditStm() string {
 		"partner_earned_percentage",
 	}
 	totalVals := len(partnerCreditValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetPartnerCreditValues() {

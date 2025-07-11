@@ -1,5 +1,7 @@
 package importer
 
+import "github.com/DevVictor19/enube/backend/importer/helpers"
+
 var (
 	chargeValues []any
 )
@@ -40,17 +42,17 @@ func consumeChargeFacts(row []string) {
 		getBenefitSk(row),
 		getBenefitOrderSk(row),
 		getAvailabilitySk(row),
-		toNullableDate(usageDate),
+		helpers.ToNullableDate(usageDate),
 		resourceUri,
-		toNullableFloat64(effectiveUnitPrice),
-		toNullableFloat64(unitPrice),
-		toNullableFloat64(quantity),
-		toNullableFloat64(billingPreTaxTotal),
+		helpers.ToNullableFloat64(effectiveUnitPrice),
+		helpers.ToNullableFloat64(unitPrice),
+		helpers.ToNullableFloat64(quantity),
+		helpers.ToNullableFloat64(billingPreTaxTotal),
 		billingCurrency,
-		toNullableFloat64(pricingPreTaxTotal),
+		helpers.ToNullableFloat64(pricingPreTaxTotal),
 		pricingCurrency,
-		toNullableFloat64(pcToBcExchangeRate),
-		toNullableDate(pcToBcExchangeRateDate),
+		helpers.ToNullableFloat64(pcToBcExchangeRate),
+		helpers.ToNullableDate(pcToBcExchangeRateDate),
 		serviceInfo1,
 		serviceInfo2,
 		tags,
@@ -96,7 +98,7 @@ func getFactChargesStm() string {
 		"additional_info",
 	}
 	totalVals := len(chargeValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetChargeValues() {

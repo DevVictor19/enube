@@ -1,6 +1,10 @@
 package importer
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/DevVictor19/enube/backend/importer/helpers"
+)
 
 var (
 	benefitSequence = 0
@@ -56,7 +60,7 @@ func getBenefitStm() string {
 		"type",
 	}
 	totalVals := len(benefitValues)
-	return buildBatchInsert(table, cols, totalVals)
+	return helpers.BuildBatchInsert(table, cols, totalVals)
 }
 
 func resetBenefitValues() {
