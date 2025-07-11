@@ -15,7 +15,7 @@ func buildBatchInsert(tableName string, columns []string, totalValues int) strin
 
 	builder.WriteString("INSERT INTO ")
 	builder.WriteString(tableName)
-	builder.WriteString(" (" + strings.Join(columns, ", ") + ") VALUES ")
+	builder.WriteString(fmt.Sprintf(" (%s) VALUES ", strings.Join(columns, ", ")))
 
 	for i := 0; i < rows; i++ {
 		builder.WriteString("(")
