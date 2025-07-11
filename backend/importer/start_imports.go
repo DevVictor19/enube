@@ -15,8 +15,6 @@ import (
 const batchSize = 1500
 
 func StartImports() {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
 	start := time.Now()
 
 	db, err := database.Connect()
@@ -81,8 +79,17 @@ func StartImports() {
 
 	fmt.Println("File data import finished")
 
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+
 	elapsed := time.Since(start)
 	fmt.Printf("Execution Time: %v ms\n", elapsed.Milliseconds())
+
+	fmt.Println("=== Go Runtime Memory Stats AFTER processing ===")
+	fmt.Printf("Current Allocation: %v KB\n", memStats.Alloc/1024)
+	fmt.Printf("Total Allocation: %v KB\n", memStats.TotalAlloc/1024)
+	fmt.Printf("System Memory Used by Go: %v KB\n", memStats.Sys/1024)
+	fmt.Printf("Number of GCs: %v\n", memStats.NumGC)
 }
 
 func getExcelFilepath() string {
