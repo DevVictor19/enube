@@ -1,6 +1,9 @@
 package importer
 
-import "fmt"
+import (
+	"database/sql"
+	"fmt"
+)
 
 var (
 	monthsChargeDateSequence = 0
@@ -8,12 +11,16 @@ var (
 	monthsChargeDateValues   []any
 )
 
-func getMonthsChargeDateSk(row []string) *int {
+func getMonthsChargeDateSk(row []string) sql.NullInt32 {
+	if len(row) <= chargeEndDateIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	chargeStartDate := row[chargeStartDateIndex]
 	chargeEndDate := row[chargeEndDateIndex]
 
 	if chargeStartDate == "" || chargeEndDate == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if monthsChargeDates == nil {
@@ -34,10 +41,16 @@ func getMonthsChargeDateSk(row []string) *int {
 			toNullableDate(chargeEndDate),
 		)
 
-		return &monthsChargeDateSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(monthsChargeDateSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getMonthsChargeDateStm() string {

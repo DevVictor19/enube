@@ -1,16 +1,22 @@
 package importer
 
+import "database/sql"
+
 var (
 	serviceSequence = 0
 	services        map[string]int
 	serviceValues   []any
 )
 
-func getServiceSk(row []string) *int {
+func getServiceSk(row []string) sql.NullInt32 {
+	if len(row) <= consumedServiceIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	service := row[consumedServiceIndex]
 
 	if service == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if services == nil {
@@ -28,10 +34,16 @@ func getServiceSk(row []string) *int {
 			service,
 		)
 
-		return &serviceSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(serviceSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getServiceStm() string {

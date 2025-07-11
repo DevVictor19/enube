@@ -1,19 +1,25 @@
 package importer
 
+import "database/sql"
+
 var (
 	partnerSequence = 0
 	partners        map[string]int
 	partnerValues   []any
 )
 
-func getPartnerSk(row []string) *int {
+func getPartnerSk(row []string) sql.NullInt32 {
+	if len(row) <= invoiceNumberIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	partnerId := row[partnerIdIndex]
 	partnerName := row[partnerNameIndex]
 	mpnId := row[mpnIdIndex]
 	invoiceNumber := row[invoiceNumberIndex]
 
 	if partnerId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if partners == nil {
@@ -34,10 +40,16 @@ func getPartnerSk(row []string) *int {
 			invoiceNumber,
 		)
 
-		return &partnerSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(partnerSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getPartnerStm() string {

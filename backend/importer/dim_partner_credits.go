@@ -1,18 +1,24 @@
 package importer
 
+import "database/sql"
+
 var (
 	partnerCreditSequence = 0
 	partnerCredits        map[string]int
 	partnerCreditValues   []any
 )
 
-func getPartnerCreditSk(row []string) *int {
+func getPartnerCreditSk(row []string) sql.NullInt32 {
+	if len(row) <= partnerEarnedCreditPercentageIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	creditType := row[creditTypeIndex]
 	percentage := row[creditPercentageIndex]
 	partnerEarnedPercentage := row[partnerEarnedCreditPercentageIndex]
 
 	if creditType == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if partnerCredits == nil {
@@ -32,10 +38,16 @@ func getPartnerCreditSk(row []string) *int {
 			toNullableFloat64(partnerEarnedPercentage),
 		)
 
-		return &partnerCreditSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(partnerCreditSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getPartnerCreditStm() string {

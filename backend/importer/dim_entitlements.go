@@ -1,17 +1,23 @@
 package importer
 
+import "database/sql"
+
 var (
 	entitlementSequence = 0
 	entitlements        map[string]int
 	entitlementValues   []any
 )
 
-func getEntitlementSk(row []string) *int {
+func getEntitlementSk(row []string) sql.NullInt32 {
+	if len(row) <= entitlementDescriptionIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	entitlementId := row[entitlementIdIndex]
 	description := row[entitlementDescriptionIndex]
 
 	if entitlementId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if entitlements == nil {
@@ -30,10 +36,16 @@ func getEntitlementSk(row []string) *int {
 			description,
 		)
 
-		return &entitlementSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(entitlementSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getEntitlementStm() string {

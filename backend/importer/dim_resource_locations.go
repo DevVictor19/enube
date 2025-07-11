@@ -1,16 +1,22 @@
 package importer
 
+import "database/sql"
+
 var (
 	resourceLocationSequence = 0
 	resourceLocations        map[string]int
 	resourceLocationValues   []any
 )
 
-func getResourceLocationSk(row []string) *int {
+func getResourceLocationSk(row []string) sql.NullInt32 {
+	if len(row) <= resourceLocationIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	location := row[resourceLocationIndex]
 
 	if location == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if resourceLocations == nil {
@@ -28,10 +34,16 @@ func getResourceLocationSk(row []string) *int {
 			location,
 		)
 
-		return &resourceLocationSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(resourceLocationSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getResourceLocationStm() string {

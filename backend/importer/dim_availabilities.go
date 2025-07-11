@@ -1,16 +1,21 @@
 package importer
 
+import "database/sql"
+
 var (
 	availabilitySequence = 0
 	availabilities       map[string]int
 	availabilityValues   []any
 )
 
-func getAvailabilitySk(row []string) *int {
-	availabilityId := row[availabilityIdIndex]
+func getAvailabilitySk(row []string) sql.NullInt32 {
+	if len(row) <= availabilityIdIndex {
+		return sql.NullInt32{Valid: false}
+	}
 
+	availabilityId := row[availabilityIdIndex]
 	if availabilityId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if availabilities == nil {
@@ -28,10 +33,16 @@ func getAvailabilitySk(row []string) *int {
 			availabilityId,
 		)
 
-		return &availabilitySequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(availabilitySequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getAvailabilityStm() string {

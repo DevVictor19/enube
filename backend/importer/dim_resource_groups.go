@@ -1,16 +1,22 @@
 package importer
 
+import "database/sql"
+
 var (
 	resourceGroupSequence = 0
 	resourceGroups        map[string]int
 	resourceGroupValues   []any
 )
 
-func getResourceGroupSk(row []string) *int {
+func getResourceGroupSk(row []string) sql.NullInt32 {
+	if len(row) <= resourceGroupIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	name := row[resourceGroupIndex]
 
 	if name == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if resourceGroups == nil {
@@ -28,10 +34,16 @@ func getResourceGroupSk(row []string) *int {
 			name,
 		)
 
-		return &resourceGroupSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(resourceGroupSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getResourceGroupStm() string {

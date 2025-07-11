@@ -1,12 +1,18 @@
 package importer
 
+import "database/sql"
+
 var (
 	meterSequence = 0
 	meters        map[string]int
 	meterValues   []any
 )
 
-func getMeterSk(row []string) *int {
+func getMeterSk(row []string) sql.NullInt32 {
+	if len(row) <= meterUnitIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	meterId := row[meterIdIndex]
 	name := row[meterNameIndex]
 	category := row[meterCategoryIndex]
@@ -16,7 +22,7 @@ func getMeterSk(row []string) *int {
 	unit := row[meterUnitIndex]
 
 	if meterId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if meters == nil {
@@ -40,10 +46,16 @@ func getMeterSk(row []string) *int {
 			unit,
 		)
 
-		return &meterSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(meterSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getMeterStm() string {

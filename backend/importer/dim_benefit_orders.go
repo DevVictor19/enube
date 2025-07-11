@@ -1,20 +1,26 @@
 package importer
 
+import "database/sql"
+
 var (
 	benefitOrderSequence = 0
 	benefitOrders        map[string]int
 	benefitOrderValues   []any
 )
 
-func getBenefitOrderSk(row []string) *int {
+func getBenefitOrderSk(row []string) sql.NullInt32 {
 	if len(row) < 53 {
-		return nil
+		return sql.NullInt32{
+			Valid: false,
+		}
 	}
 
 	benefitOrderId := row[benefitOrderIdIndex]
 
 	if benefitOrderId == "" {
-		return nil
+		return sql.NullInt32{
+			Valid: false,
+		}
 	}
 
 	if benefitOrders == nil {
@@ -32,10 +38,16 @@ func getBenefitOrderSk(row []string) *int {
 			benefitOrderId,
 		)
 
-		return &benefitOrderSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(benefitOrderSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getBenefitOrderStm() string {

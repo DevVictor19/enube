@@ -1,17 +1,21 @@
 package importer
 
+import "database/sql"
+
 var (
 	subscriptionSequence = 0
 	subscriptions        map[string]int
 	subscriptionValues   []any
 )
 
-func getSubscriptionSk(row []string) *int {
+func getSubscriptionSk(row []string) sql.NullInt32 {
 	subscriptionId := row[subscriptionIdIndex]
 	description := row[subscriptionDescriptionIndex]
 
 	if subscriptionId == "" {
-		return nil
+		return sql.NullInt32{
+			Valid: false,
+		}
 	}
 
 	if subscriptions == nil {
@@ -30,10 +34,16 @@ func getSubscriptionSk(row []string) *int {
 			description,
 		)
 
-		return &subscriptionSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(subscriptionSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getSubscriptionStm() string {

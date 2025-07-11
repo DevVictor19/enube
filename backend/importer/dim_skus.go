@@ -1,17 +1,23 @@
 package importer
 
+import "database/sql"
+
 var (
 	skuSequence = 0
 	skus        map[string]int
 	skuValues   []any
 )
 
-func getSkuSk(row []string) *int {
+func getSkuSk(row []string) sql.NullInt32 {
+	if len(row) <= skuNameIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	skuId := row[skuIdIndex]
 	skuName := row[skuNameIndex]
 
 	if skuId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if skus == nil {
@@ -30,10 +36,16 @@ func getSkuSk(row []string) *int {
 			skuName,
 		)
 
-		return &skuSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(skuSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getSkuStm() string {

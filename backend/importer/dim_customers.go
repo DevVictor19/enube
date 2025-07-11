@@ -1,12 +1,18 @@
 package importer
 
+import "database/sql"
+
 var (
 	customerSequence = 0
 	customers        map[string]int
 	customerValues   []any
 )
 
-func getCustomerSk(row []string) *int {
+func getCustomerSk(row []string) sql.NullInt32 {
+	if len(row) <= tier2MpnIdIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	customerId := row[customerIdIndex]
 	customerName := row[customerNameIndex]
 	customerDomain := row[customerDomainNameIndex]
@@ -14,7 +20,7 @@ func getCustomerSk(row []string) *int {
 	tier2MpnId := row[tier2MpnIdIndex]
 
 	if customerId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if customers == nil {
@@ -36,10 +42,16 @@ func getCustomerSk(row []string) *int {
 			toNullableInt64(tier2MpnId),
 		)
 
-		return &customerSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(customerSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getCustomerStm() string {

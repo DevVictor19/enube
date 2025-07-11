@@ -1,16 +1,20 @@
 package importer
 
+import "database/sql"
+
 var (
 	unitTypeSequence = 0
 	unitTypes        map[string]int
 	unitTypeValues   []any
 )
 
-func getUnitTypeSk(row []string) *int {
+func getUnitTypeSk(row []string) sql.NullInt32 {
 	unitType := row[unitTypeIndex]
 
 	if unitType == "" {
-		return nil
+		return sql.NullInt32{
+			Valid: false,
+		}
 	}
 
 	if unitTypes == nil {
@@ -28,10 +32,16 @@ func getUnitTypeSk(row []string) *int {
 			unitType,
 		)
 
-		return &unitTypeSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(unitTypeSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getUnitTypeStm() string {

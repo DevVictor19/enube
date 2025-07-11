@@ -1,17 +1,23 @@
 package importer
 
+import "database/sql"
+
 var (
 	publisherSequence = 0
 	publishers        map[string]int
 	publisherValues   []any
 )
 
-func getPublisherSk(row []string) *int {
+func getPublisherSk(row []string) sql.NullInt32 {
+	if len(row) <= publisherNameIndex {
+		return sql.NullInt32{Valid: false}
+	}
+
 	publisherId := row[publisherIdIndex]
 	publisherName := row[publisherNameIndex]
 
 	if publisherId == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if publishers == nil {
@@ -30,10 +36,16 @@ func getPublisherSk(row []string) *int {
 			publisherName,
 		)
 
-		return &publisherSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(publisherSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getPublisherStm() string {

@@ -1,16 +1,21 @@
 package importer
 
+import "database/sql"
+
 var (
 	chargeTypeSequence = 0
 	chargeTypes        map[string]int
 	chargeTypeValues   []any
 )
 
-func getChargeTypeSk(row []string) *int {
-	chargeType := row[chargeTypeIndex]
+func getChargeTypeSk(row []string) sql.NullInt32 {
+	if len(row) <= chargeTypeIndex {
+		return sql.NullInt32{Valid: false}
+	}
 
+	chargeType := row[chargeTypeIndex]
 	if chargeType == "" {
-		return nil
+		return sql.NullInt32{Valid: false}
 	}
 
 	if chargeTypes == nil {
@@ -28,10 +33,16 @@ func getChargeTypeSk(row []string) *int {
 			chargeType,
 		)
 
-		return &chargeTypeSequence
+		return sql.NullInt32{
+			Valid: true,
+			Int32: int32(chargeTypeSequence),
+		}
 	}
 
-	return &existentSequence
+	return sql.NullInt32{
+		Valid: true,
+		Int32: int32(existentSequence),
+	}
 }
 
 func getChargeTypeStm() string {
