@@ -16,6 +16,7 @@ import (
 
 const (
 	QueryDuration = time.Second * 5
+	ParamsLimit   = 165000
 	maxOpenConns  = 30
 	maxIdleConns  = 30
 	maxIdleTime   = "15m"
