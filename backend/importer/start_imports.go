@@ -7,21 +7,20 @@ import (
 	"runtime"
 	"sync"
 
+	"github.com/DevVictor19/enube/backend/importer/database"
 	"github.com/xuri/excelize/v2"
 )
 
-const batchSize = 2
+const batchSize = 1000
 
 func StartImports() {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		log.Fatal("could not get current file path")
+	db, err := database.Connect()
+	if err != nil {
+		log.Fatal(err)
 	}
-	currentDirPath := filepath.Dir(filename)
-	dataFile := "reconfile-fornecedores.xlsx"
-	filepath := filepath.Join(currentDirPath, "files", dataFile)
+	defer db.Close()
 
-	f, err := excelize.OpenFile(filepath)
+	f, err := excelize.OpenFile(getExcelFilepath())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +40,7 @@ func StartImports() {
 
 	var wg sync.WaitGroup
 
-	rowsToInsert := make([][]string, 0, batchSize)
+	rowsToInsert := 0
 	isFirstRow := true
 
 	for rows.Next() {
@@ -55,25 +54,22 @@ func StartImports() {
 			log.Fatal(err)
 		}
 
-		if len(rowsToInsert) == batchSize {
+		if rowsToInsert == batchSize {
+			fmt.Printf("Starting batch insert of %d rows\n", rowsToInsert)
 			wg.Add(1)
-			fmt.Println("Starting batch insert")
-			// antes de entrar na go routine eu já tenho que salvar no hashmaps os valores
-			// das dimensões
-			// insertRows vai receber apenas a query feita
-			go insertRows(rowsToInsert, &wg)
-			rowsToInsert = make([][]string, 0, batchSize)
-			break
+			rowsToInsert = 0
+			go executeInsert(prepareInsert(), &wg)
 		} else {
-			rowsToInsert = append(rowsToInsert, row)
+			rowsToInsert++
+			consumeChargeFacts(row)
 		}
 
 	}
 
-	if len(rowsToInsert) > 0 {
+	if rowsToInsert > 0 {
 		wg.Add(1)
-		fmt.Println("Starting batch insert")
-		go insertRows(rowsToInsert, &wg)
+		fmt.Printf("Starting batch insert of %d rows\n", rowsToInsert)
+		go executeInsert(prepareInsert(), &wg)
 	}
 
 	wg.Wait()
@@ -81,7 +77,12 @@ func StartImports() {
 	fmt.Println("File data import finished")
 }
 
-func insertRows(rowsToInsert [][]string, wg *sync.WaitGroup) {
-	fmt.Println(rowsToInsert)
-	wg.Done()
+func getExcelFilepath() string {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("could not get current file path")
+	}
+	currentDirPath := filepath.Dir(filename)
+	dataFile := "reconfile-fornecedores.xlsx"
+	return filepath.Join(currentDirPath, "files", dataFile)
 }
