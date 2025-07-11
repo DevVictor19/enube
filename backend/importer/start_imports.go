@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"sync"
+	"time"
 
 	"github.com/DevVictor19/enube/backend/importer/database"
 	"github.com/xuri/excelize/v2"
@@ -14,6 +15,10 @@ import (
 const batchSize = 1000
 
 func StartImports() {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+	start := time.Now()
+
 	db, err := database.Connect()
 	if err != nil {
 		log.Fatal(err)
@@ -75,6 +80,9 @@ func StartImports() {
 	wg.Wait()
 
 	fmt.Println("File data import finished")
+
+	elapsed := time.Since(start)
+	fmt.Printf("Execution Time: %v ms\n", elapsed.Milliseconds())
 }
 
 func getExcelFilepath() string {
