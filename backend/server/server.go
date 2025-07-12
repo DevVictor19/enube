@@ -54,7 +54,26 @@ func mount() http.Handler {
 	}
 
 	chargeRepo := repositories.NewChargeRepository(database, db.QueryDuration)
+	customerRepo := repositories.NewCustomerRepository(database, db.QueryDuration)
+	partnerRepo := repositories.NewPartnerRepository(database, db.QueryDuration)
+	productRepo := repositories.NewProductRepository(database, db.QueryDuration)
+	monthChargeDateRepo := repositories.NewMonthChargeDateRepository(database, db.QueryDuration)
+	usageDateRepo := repositories.NewUsageDateRepository(database, db.QueryDuration)
+	billingCurrencyRepo := repositories.NewBillingCurrencyRepository(database, db.QueryDuration)
+	pricingCurrencyRepo := repositories.NewPricingCurrencyRepository(database, db.QueryDuration)
+	resourceLocationRepo := repositories.NewResourceLocationRepository(database, db.QueryDuration)
+	serviceRepo := repositories.NewServiceRepository(database, db.QueryDuration)
+
 	chargeCtl := controllers.NewChargeController(chargeRepo)
+	customerCtl := controllers.NewCustomerController(customerRepo)
+	partnerCtl := controllers.NewPartnerController(partnerRepo)
+	productCtl := controllers.NewProductController(productRepo)
+	monthChargeDateCtl := controllers.NewMonthChargeDateController(monthChargeDateRepo)
+	usageDateCtl := controllers.NewUsageDateController(usageDateRepo)
+	billingCurrencyCtl := controllers.NewBillingCurrencyController(billingCurrencyRepo)
+	pricingCurrencyCtl := controllers.NewPricingCurrencyController(pricingCurrencyRepo)
+	resourceLocationCtl := controllers.NewResourceLocationController(resourceLocationRepo)
+	serviceCtl := controllers.NewServiceController(serviceRepo)
 
 	r := chi.NewRouter()
 
@@ -73,6 +92,16 @@ func mount() http.Handler {
 			r.Get("/", chargeCtl.FindPaginated)
 			r.Get("/resume", chargeCtl.GetResume)
 		})
+
+		r.Get("/customers", customerCtl.FindPaginated)
+		r.Get("/partners", partnerCtl.FindPaginated)
+		r.Get("/products", productCtl.FindPaginated)
+		r.Get("/months_charge_dates", monthChargeDateCtl.FindPaginated)
+		r.Get("/usage_dates", usageDateCtl.FindPaginated)
+		r.Get("/billing_currencies", billingCurrencyCtl.FindPaginated)
+		r.Get("/pricing_currencies", pricingCurrencyCtl.FindPaginated)
+		r.Get("/resource_locations", resourceLocationCtl.FindPaginated)
+		r.Get("/services", serviceCtl.FindPaginated)
 	})
 
 	return r

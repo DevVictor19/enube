@@ -1,6 +1,6 @@
 package types
 
-type FindPaginated[T any] struct {
+type PaginatedResult[T any] struct {
 	Page    int `json:"page"`
 	Limit   int `json:"limit"`
 	Results int `json:"results"`

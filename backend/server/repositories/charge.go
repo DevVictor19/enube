@@ -26,7 +26,7 @@ func (r *ChargeRepository) FindPaginated(
 	ctx context.Context,
 	pagination types.PaginationParams,
 	filters map[string]any,
-) (*types.FindPaginated[ChargeData], error) {
+) (*types.PaginatedResult[ChargeData], error) {
 
 	offset, limit, err := utils.GetOffsetAndLimit(pagination)
 	if err != nil {
@@ -139,7 +139,7 @@ func (r *ChargeRepository) FindPaginated(
 		return nil, err
 	}
 
-	return &types.FindPaginated[ChargeData]{
+	return &types.PaginatedResult[ChargeData]{
 		Data:    charges,
 		Page:    pagination.Page,
 		Limit:   pagination.Limit,
