@@ -33,6 +33,20 @@ func (ctl *ChargeController) FindPaginated(w http.ResponseWriter, r *http.Reques
 	utils.WriteJSON(w, http.StatusOK, resp)
 }
 
+func (ctl *ChargeController) GetResume(w http.ResponseWriter, r *http.Request) {
+	filters := ctl.getAllowedFilters(r)
+
+	resp, err := ctl.chargeRepository.GetResume(r.Context(), filters)
+	if err != nil {
+		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, resp)
+}
+
 func (ctl *ChargeController) getAllowedFilters(r *http.Request) map[string]any {
 	allowed := []string{
 		"dc.customer_sk",

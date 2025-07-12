@@ -71,6 +71,7 @@ func mount() http.Handler {
 
 		r.Route("/charges", func(r chi.Router) {
 			r.Get("/", chargeCtl.FindPaginated)
+			r.Get("/resume", chargeCtl.GetResume)
 		})
 	})
 
