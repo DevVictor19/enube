@@ -53,27 +53,8 @@ func mount() http.Handler {
 		panic(err)
 	}
 
-	chargeRepo := repositories.NewChargeRepository(database, db.QueryDuration)
-	customerRepo := repositories.NewCustomerRepository(database, db.QueryDuration)
-	partnerRepo := repositories.NewPartnerRepository(database, db.QueryDuration)
-	productRepo := repositories.NewProductRepository(database, db.QueryDuration)
-	monthChargeDateRepo := repositories.NewMonthChargeDateRepository(database, db.QueryDuration)
-	usageDateRepo := repositories.NewUsageDateRepository(database, db.QueryDuration)
-	billingCurrencyRepo := repositories.NewBillingCurrencyRepository(database, db.QueryDuration)
-	pricingCurrencyRepo := repositories.NewPricingCurrencyRepository(database, db.QueryDuration)
-	resourceLocationRepo := repositories.NewResourceLocationRepository(database, db.QueryDuration)
-	serviceRepo := repositories.NewServiceRepository(database, db.QueryDuration)
-
-	chargeCtl := controllers.NewChargeController(chargeRepo)
-	customerCtl := controllers.NewCustomerController(customerRepo)
-	partnerCtl := controllers.NewPartnerController(partnerRepo)
-	productCtl := controllers.NewProductController(productRepo)
-	monthChargeDateCtl := controllers.NewMonthChargeDateController(monthChargeDateRepo)
-	usageDateCtl := controllers.NewUsageDateController(usageDateRepo)
-	billingCurrencyCtl := controllers.NewBillingCurrencyController(billingCurrencyRepo)
-	pricingCurrencyCtl := controllers.NewPricingCurrencyController(pricingCurrencyRepo)
-	resourceLocationCtl := controllers.NewResourceLocationController(resourceLocationRepo)
-	serviceCtl := controllers.NewServiceController(serviceRepo)
+	repos := repositories.NewRepositories(database, db.QueryDuration)
+	ctls := controllers.NewControllers(repos)
 
 	r := chi.NewRouter()
 
@@ -89,19 +70,19 @@ func mount() http.Handler {
 		})
 
 		r.Route("/charges", func(r chi.Router) {
-			r.Get("/", chargeCtl.FindPaginated)
-			r.Get("/resume", chargeCtl.GetResume)
+			r.Get("/", ctls.Charge.FindPaginated)
+			r.Get("/resume", ctls.Charge.GetResume)
 		})
 
-		r.Get("/customers", customerCtl.FindPaginated)
-		r.Get("/partners", partnerCtl.FindPaginated)
-		r.Get("/products", productCtl.FindPaginated)
-		r.Get("/months_charge_dates", monthChargeDateCtl.FindPaginated)
-		r.Get("/usage_dates", usageDateCtl.FindPaginated)
-		r.Get("/billing_currencies", billingCurrencyCtl.FindPaginated)
-		r.Get("/pricing_currencies", pricingCurrencyCtl.FindPaginated)
-		r.Get("/resource_locations", resourceLocationCtl.FindPaginated)
-		r.Get("/services", serviceCtl.FindPaginated)
+		r.Get("/customers", ctls.Customer.FindPaginated)
+		r.Get("/partners", ctls.Partner.FindPaginated)
+		r.Get("/products", ctls.Product.FindPaginated)
+		r.Get("/months_charge_dates", ctls.MonthChargeDate.FindPaginated)
+		r.Get("/usage_dates", ctls.UsageDate.FindPaginated)
+		r.Get("/billing_currencies", ctls.BillingCurrency.FindPaginated)
+		r.Get("/pricing_currencies", ctls.PricingCurrency.FindPaginated)
+		r.Get("/resource_locations", ctls.ResourceLocation.FindPaginated)
+		r.Get("/services", ctls.Service.FindPaginated)
 	})
 
 	return r
