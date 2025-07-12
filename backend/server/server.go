@@ -10,6 +10,7 @@ import (
 	"github.com/DevVictor19/enube/backend/server/db"
 	"github.com/DevVictor19/enube/backend/server/env"
 	"github.com/DevVictor19/enube/backend/server/repositories"
+	"github.com/DevVictor19/enube/backend/server/services"
 	"github.com/DevVictor19/enube/backend/server/utils"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -53,8 +54,14 @@ func mount() http.Handler {
 		panic(err)
 	}
 
+	cfg, err := env.GetEnv()
+	if err != nil {
+		panic(err)
+	}
+
 	repos := repositories.NewRepositories(database, db.QueryDuration)
-	ctls := controllers.NewControllers(repos)
+	svcs := services.NewServices(cfg)
+	ctls := controllers.NewControllers(repos, svcs)
 
 	r := chi.NewRouter()
 
@@ -69,21 +76,29 @@ func mount() http.Handler {
 			utils.WriteJSON(w, http.StatusOK, map[string]string{"message": "ok"})
 		})
 
-		r.Route("/charges", func(r chi.Router) {
-			r.Get("/", ctls.Charge.FindPaginated)
-			r.Get("/resume", ctls.Charge.GetResume)
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/login", ctls.Auth.Login)
 		})
 
-		r.Get("/customers", ctls.Customer.FindPaginated)
-		r.Get("/partners", ctls.Partner.FindPaginated)
-		r.Get("/products", ctls.Product.FindPaginated)
-		r.Get("/months_charge_dates", ctls.MonthChargeDate.FindPaginated)
-		r.Get("/usage_dates", ctls.UsageDate.FindPaginated)
-		r.Get("/billing_currencies", ctls.BillingCurrency.FindPaginated)
-		r.Get("/pricing_currencies", ctls.PricingCurrency.FindPaginated)
-		r.Get("/resource_locations", ctls.ResourceLocation.FindPaginated)
-		r.Get("/services", ctls.Service.FindPaginated)
-	})
+		// protected routes
+		r.Group(func(r chi.Router) {
+			r.Use(makeJWTAuthMiddleware(svcs.JWT, repos.User))
 
+			r.Route("/charges", func(r chi.Router) {
+				r.Get("/", ctls.Charge.FindPaginated)
+				r.Get("/resume", ctls.Charge.GetResume)
+			})
+
+			r.Get("/customers", ctls.Customer.FindPaginated)
+			r.Get("/partners", ctls.Partner.FindPaginated)
+			r.Get("/products", ctls.Product.FindPaginated)
+			r.Get("/months_charge_dates", ctls.MonthChargeDate.FindPaginated)
+			r.Get("/usage_dates", ctls.UsageDate.FindPaginated)
+			r.Get("/billing_currencies", ctls.BillingCurrency.FindPaginated)
+			r.Get("/pricing_currencies", ctls.PricingCurrency.FindPaginated)
+			r.Get("/resource_locations", ctls.ResourceLocation.FindPaginated)
+			r.Get("/services", ctls.Service.FindPaginated)
+		})
+	})
 	return r
 }

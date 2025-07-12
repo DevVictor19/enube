@@ -12,6 +12,7 @@ import (
 type Config struct {
 	ServerPort string
 	DB         PostgresConfig
+	JWT        JWTConfig
 }
 
 type PostgresConfig struct {
@@ -19,6 +20,12 @@ type PostgresConfig struct {
 	MaxOpenConns int
 	MaxIdleConns int
 	MaxIdleTime  string
+}
+
+type JWTConfig struct {
+	Secret string
+	Iss    string
+	Aud    string
 }
 
 var cfg *Config
@@ -43,6 +50,11 @@ func LoadEnv() (*Config, error) {
 			MaxOpenConns: getInt("DB_MAX_OPEN_CONNS"),
 			MaxIdleConns: getInt("DB_MAX_IDLE_CONNS"),
 			MaxIdleTime:  getString("DB_MAX_IDLE_TIME"),
+		},
+		JWT: JWTConfig{
+			Secret: getString("JWT_SECRET"),
+			Iss:    getString("JWT_ISS"),
+			Aud:    getString("JWT_AUD"),
 		},
 	}
 

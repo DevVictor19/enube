@@ -1,6 +1,9 @@
 package controllers
 
-import "github.com/DevVictor19/enube/backend/server/repositories"
+import (
+	"github.com/DevVictor19/enube/backend/server/repositories"
+	"github.com/DevVictor19/enube/backend/server/services"
+)
 
 type Controllers struct {
 	Charge           *ChargeController
@@ -13,9 +16,10 @@ type Controllers struct {
 	PricingCurrency  *PricingCurrencyController
 	ResourceLocation *ResourceLocationController
 	Service          *ServiceController
+	Auth             *AuthController
 }
 
-func NewControllers(repos *repositories.Repositories) *Controllers {
+func NewControllers(repos *repositories.Repositories, svcs *services.Services) *Controllers {
 	return &Controllers{
 		Charge:           NewChargeController(repos.Charge),
 		Customer:         NewCustomerController(repos.Customer),
@@ -27,5 +31,6 @@ func NewControllers(repos *repositories.Repositories) *Controllers {
 		PricingCurrency:  NewPricingCurrencyController(repos.PricingCurrency),
 		ResourceLocation: NewResourceLocationController(repos.ResourceLocation),
 		Service:          NewServiceController(repos.Service),
+		Auth:             NewAuthController(svcs.JWT, svcs.Bcrypt, repos.User),
 	}
 }

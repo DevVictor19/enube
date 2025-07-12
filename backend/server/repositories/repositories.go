@@ -16,6 +16,7 @@ type Repositories struct {
 	PricingCurrency  *PricingCurrencyRepository
 	ResourceLocation *ResourceLocationRepository
 	Service          *ServiceRepository
+	User             *UserRepository
 }
 
 func NewRepositories(db *sql.DB, qt time.Duration) *Repositories {
@@ -30,5 +31,6 @@ func NewRepositories(db *sql.DB, qt time.Duration) *Repositories {
 		PricingCurrency:  NewPricingCurrencyRepository(db, qt),
 		ResourceLocation: NewResourceLocationRepository(db, qt),
 		Service:          NewServiceRepository(db, qt),
+		User:             NewUserRepository(db, qt),
 	}
 }
