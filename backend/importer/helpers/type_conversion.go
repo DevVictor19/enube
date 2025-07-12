@@ -48,11 +48,20 @@ func ToNullableDate(s string) sql.NullTime {
 			Valid: false,
 		}
 	}
-	layout := "02-01-06"
+	layout := "01-02-06" // mm-dd-yyyy
 	t, err := time.Parse(layout, s)
 	if err != nil {
+		layout := "01/02/2006"          // mm/dd/yyyy
+		t, err := time.Parse(layout, s) // try again
+
+		if err != nil {
+			return sql.NullTime{
+				Valid: false,
+			}
+		}
 		return sql.NullTime{
-			Valid: false,
+			Valid: true,
+			Time:  t,
 		}
 	}
 	return sql.NullTime{
