@@ -7,15 +7,12 @@ var (
 )
 
 func consumeChargeFacts(row []string) {
-	usageDate := row[usageDateIndex]
 	resourceUri := row[resourceUriIndex]
 	effectiveUnitPrice := row[effectiveUnitPriceIndex]
 	unitPrice := row[unitPriceIndex]
 	quantity := row[quantityIndex]
 	billingPreTaxTotal := row[billingPreTaxTotalIndex]
-	billingCurrency := row[billingCurrencyIndex]
 	pricingPreTaxTotal := row[pricingPreTaxTotalIndex]
-	pricingCurrency := row[pricingCurrencyIndex]
 	pcToBcExchangeRate := row[pcToBcExchangeRateIndex]
 	pcToBcExchangeRateDate := row[pcToBcExchangeRateDateIndex]
 	serviceInfo1 := row[serviceInfo1Index]
@@ -42,15 +39,15 @@ func consumeChargeFacts(row []string) {
 		getBenefitSk(row),
 		getBenefitOrderSk(row),
 		getAvailabilitySk(row),
-		helpers.ToNullableDate(usageDate),
+		getUsageDateSk(row),
+		getBillingCurrencySk(row),
+		getPricingCurrencySk(row),
 		resourceUri,
 		helpers.ToNullableFloat64(effectiveUnitPrice),
 		helpers.ToNullableFloat64(unitPrice),
 		helpers.ToNullableFloat64(quantity),
 		helpers.ToNullableFloat64(billingPreTaxTotal),
-		billingCurrency,
 		helpers.ToNullableFloat64(pricingPreTaxTotal),
-		pricingCurrency,
 		helpers.ToNullableFloat64(pcToBcExchangeRate),
 		helpers.ToNullableDate(pcToBcExchangeRateDate),
 		serviceInfo1,
@@ -81,15 +78,15 @@ func getFactChargesStm() string {
 		"benefit_sk",
 		"benefit_order_sk",
 		"availability_sk",
-		"usage_date",
+		"usage_date_sk",
+		"billing_currency_sk",
+		"pricing_currency_sk",
 		"resource_uri",
 		"effective_unit_price",
 		"unit_price",
 		"quantity",
 		"billing_pre_tax_total",
-		"billing_currency",
 		"pricing_pre_tax_total",
-		"pricing_currency",
 		"pc_to_bc_exchange_rate",
 		"pc_to_bc_exchange_rate_date",
 		"service_info_1",

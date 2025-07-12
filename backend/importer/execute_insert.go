@@ -108,6 +108,21 @@ func executeInsert(data *insertData, wg *sync.WaitGroup) {
 		log.Fatal("dim_unit_type err:", err)
 	}
 
+	if _, err := tx.Exec(data.usageDateStm, data.usageDateValues...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_usage_dates err:", err)
+	}
+
+	if _, err := tx.Exec(data.billingCurrencyStm, data.billingCurrencyValues...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_billing_currencies err:", err)
+	}
+
+	if _, err := tx.Exec(data.pricingCurrencyStm, data.pricingCurrencyValues...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_pricing_currencies err:", err)
+	}
+
 	if _, err := tx.Exec(data.chargeStm, data.chargeValues...); err != nil {
 		tx.Rollback()
 		log.Fatal("fact_charge err:", err)
@@ -161,6 +176,12 @@ func prepareInsert() *insertData {
 		unitTypeValues:         unitTypeValues,
 		chargeStm:              getFactChargesStm(),
 		chargeValues:           chargeValues,
+		usageDateStm:           getUsageDateStm(),
+		usageDateValues:        usageDateValues,
+		billingCurrencyStm:     getBillingCurrencyStm(),
+		billingCurrencyValues:  billingCurrencyValues,
+		pricingCurrencyStm:     getPricingCurrencyStm(),
+		pricingCurrencyValues:  pricingCurrencyValues,
 	}
 	resetValues()
 	return &data
@@ -186,6 +207,9 @@ func resetValues() {
 	resetSubscriptionValues()
 	resetUnitTypeValues()
 	resetChargeValues()
+	resetUsageDateValues()
+	resetBillingCurrencyValues()
+	resetPricingCurrencyValues()
 }
 
 type insertData struct {
@@ -227,4 +251,10 @@ type insertData struct {
 	unitTypeValues         []any
 	chargeStm              string
 	chargeValues           []any
+	usageDateStm           string
+	usageDateValues        []any
+	billingCurrencyStm     string
+	billingCurrencyValues  []any
+	pricingCurrencyStm     string
+	pricingCurrencyValues  []any
 }

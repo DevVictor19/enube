@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS dim_usage_dates;
