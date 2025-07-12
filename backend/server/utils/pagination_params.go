@@ -1,10 +1,10 @@
-package controllers
+package utils
 
 import (
 	"net/http"
 	"strconv"
 
-	"github.com/DevVictor19/enube/backend/server/repositories"
+	"github.com/DevVictor19/enube/backend/server/types"
 )
 
 const (
@@ -13,7 +13,7 @@ const (
 	maxLimit     = 100
 )
 
-func parsePaginationParams(r *http.Request) repositories.PaginationParams {
+func ParsePaginationParams(r *http.Request) types.PaginationParams {
 	query := r.URL.Query()
 
 	page, err := strconv.Atoi(query.Get("page"))
@@ -28,8 +28,13 @@ func parsePaginationParams(r *http.Request) repositories.PaginationParams {
 		limit = maxLimit
 	}
 
-	return repositories.PaginationParams{
+	return types.PaginationParams{
 		Page:  page,
 		Limit: limit,
 	}
+}
+
+func GetOffsetAndLimit(p types.PaginationParams) (int, int, error) {
+	offset := (p.Page - 1) * p.Limit
+	return offset, p.Limit, nil
 }

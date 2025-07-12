@@ -1,4 +1,4 @@
-package repositories
+package types
 
 type FindPaginated[T any] struct {
 	Page    int `json:"page"`

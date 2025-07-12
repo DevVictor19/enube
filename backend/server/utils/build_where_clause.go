@@ -1,16 +1,11 @@
-package repositories
+package utils
 
 import (
 	"fmt"
 	"strings"
 )
 
-func getOffsetAndLimit(p PaginationParams) (int, int, error) {
-	offset := (p.Page - 1) * p.Limit
-	return offset, p.Limit, nil
-}
-
-func buildWhereClause(filters map[string]any) (string, []any) {
+func BuildWhereClause(filters map[string]any) (string, []any) {
 	var builder strings.Builder
 	args := []any{}
 	first := true

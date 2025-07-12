@@ -19,7 +19,7 @@ func NewChargeController(chargeRepository *repositories.ChargeRepository) *Charg
 }
 
 func (ctl *ChargeController) FindPaginated(w http.ResponseWriter, r *http.Request) {
-	pagination := parsePaginationParams(r)
+	pagination := utils.ParsePaginationParams(r)
 	filters := ctl.getAllowedFilters(r)
 
 	resp, err := ctl.chargeRepository.FindPaginated(r.Context(), pagination, filters)

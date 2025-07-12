@@ -5,6 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
+
+	"github.com/DevVictor19/enube/backend/server/types"
+	"github.com/DevVictor19/enube/backend/server/utils"
 )
 
 type ChargeRepository struct {
@@ -21,15 +24,16 @@ func NewChargeRepository(db *sql.DB, qt time.Duration) *ChargeRepository {
 
 func (r *ChargeRepository) FindPaginated(
 	ctx context.Context,
-	pagination PaginationParams,
+	pagination types.PaginationParams,
 	filters map[string]any,
-) (*FindPaginated[ChargeData], error) {
-	offset, limit, err := getOffsetAndLimit(pagination)
+) (*types.FindPaginated[ChargeData], error) {
+
+	offset, limit, err := utils.GetOffsetAndLimit(pagination)
 	if err != nil {
 		return nil, err
 	}
 
-	whereClause, args := buildWhereClause(filters)
+	whereClause, args := utils.BuildWhereClause(filters)
 
 	baseQuery := `
 		FROM fact_charges fc
@@ -135,7 +139,7 @@ func (r *ChargeRepository) FindPaginated(
 		return nil, err
 	}
 
-	return &FindPaginated[ChargeData]{
+	return &types.FindPaginated[ChargeData]{
 		Data:    charges,
 		Page:    pagination.Page,
 		Limit:   pagination.Limit,
@@ -145,7 +149,7 @@ func (r *ChargeRepository) FindPaginated(
 }
 
 func (r *ChargeRepository) GetResume(ctx context.Context, filters map[string]any) (*ChargesResume, error) {
-	whereClause, args := buildWhereClause(filters)
+	whereClause, args := utils.BuildWhereClause(filters)
 
 	query := `SELECT 
 		COUNT(fc.charge_sk) as charges_total,
