@@ -62,7 +62,7 @@ func (ctl *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := ctl.jwtService.GenerateToken(user.ID, time.Minute*30)
+	token, err := ctl.jwtService.GenerateToken(user.ID, time.Hour)
 	if err != nil {
 		utils.WriteJSON(w, http.StatusInternalServerError, map[string]string{
 			"message": err.Error(),
