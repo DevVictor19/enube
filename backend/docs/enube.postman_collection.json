@@ -1,0 +1,574 @@
+{
+	"info": {
+		"_postman_id": "2ed748bd-d5e8-445d-b3b3-443f9e72f759",
+		"name": "enube",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28019759"
+	},
+	"item": [
+		{
+			"name": "charges",
+			"item": [
+				{
+					"name": "list charges",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/charges?page=1&limit=10&dbc.billing_currency_sk=1&dpc.pricing_currency_sk=1&drl.resource_location_sk=4&ds.service_sk=7",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"charges"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "dc.customer_sk",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "dp.partner_sk",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "dp2.product_sk",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "dmcd.months_charge_date_sk",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "dud.usage_date_sk",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "dbc.billing_currency_sk",
+									"value": "1"
+								},
+								{
+									"key": "dpc.pricing_currency_sk",
+									"value": "1"
+								},
+								{
+									"key": "drl.resource_location_sk",
+									"value": "4"
+								},
+								{
+									"key": "ds.service_sk",
+									"value": "7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "charges resume",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/charges/resume?page=1&limit=10&dc.customer_sk=2",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"charges",
+								"resume"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "dc.customer_sk",
+									"value": "2"
+								},
+								{
+									"key": "dp.partner_sk",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "dp2.product_sk",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "dmcd.months_charge_date_sk",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "dud.usage_date_sk",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "dbc.billing_currency_sk",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "dpc.pricing_currency_sk",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "drl.resource_location_sk",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "ds.service_sk",
+									"value": "7",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "dimensions",
+			"item": [
+				{
+					"name": "customers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/customers?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"customers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "partners",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/partners?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"partners"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/products?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "charge months",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/months_charge_dates?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"months_charge_dates"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "usage dates",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/usage_dates?page=2&limit=100",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"usage_dates"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "100"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "billing currencies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/billing_currencies?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"billing_currencies"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pricing currencies",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/pricing_currencies?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"pricing_currencies"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "resource locations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/resource_locations?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"resource_locations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "services",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{JWT}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/services?page=1&limit=10",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"services"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extrair o token da resposta JSON",
+									"const responseJson = pm.response.json();",
+									"const token = responseJson.token; // Pega o valor do campo \"token\"",
+									"",
+									"// Salva o token em uma variável de ambiente chamada \"JWT\"",
+									"pm.collectionVariables.set(\"JWT\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@admin.com\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "api",
+			"value": "http://localhost:8080/api/v1",
+			"type": "default"
+		},
+		{
+			"key": "JWT",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
