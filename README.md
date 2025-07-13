@@ -6,3 +6,12 @@ Este projeto é composto por duas partes principais:
 - **frontend/**: Frontend desenvolvido em React para consumir a API do backend.
 
 As instruções para instalação, configuração e execução de cada parte estão disponíveis nos respectivos READMEs dentro de cada pasta.
+
+## Importante
+
+Para acessar a aplicação, utilize uma conta já cadastrada no banco:
+
+```
+email: admin@admin.com
+password: admin
+```

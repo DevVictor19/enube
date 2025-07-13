@@ -66,6 +66,15 @@ Na pasta `/cmd` estão os comandos principais para rodar cada parte do projeto:
 
   O servidor ficará disponível em [http://localhost:8080](http://localhost:8080)
 
+## Importante
+
+Para acessar a aplicação, utilize uma conta já cadastrada no banco:
+
+```
+email: admin@admin.com
+password: admin
+```
+
 ## Documentação da API
 
 Na pasta `/docs` você encontra a coleção do Postman com os endpoints da aplicação:

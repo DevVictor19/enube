@@ -22,4 +22,13 @@ Frontend desenvolvido para consumir as rotas da API do projeto Enube Backend. O 
    npm run dev
    ```
 
-O frontend ficará disponível em `http://localhost:5173`
+O frontend ficará disponível em `http://localhost:5173`.
+
+## Importante
+
+Para acessar a aplicação, utilize uma conta já cadastrada no banco:
+
+```
+email: admin@admin.com
+password: admin
+```
