@@ -6,10 +6,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import CssBaseline from "@mui/material/CssBaseline";
+import QueryProvider from "./contexts/QueryContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CssBaseline />
-    <App />
+    <QueryProvider>
+      <App />
+    </QueryProvider>
   </StrictMode>
 );
