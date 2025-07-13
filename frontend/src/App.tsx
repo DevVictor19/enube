@@ -1,3 +1,5 @@
+import LoginPage from "./pages/Login";
+
 export default function App() {
-  return <div>App</div>;
+  return <LoginPage />;
 }
