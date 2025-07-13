@@ -10,9 +10,10 @@ import (
 )
 
 type Config struct {
-	ServerPort string
-	DB         PostgresConfig
-	JWT        JWTConfig
+	ServerPort  string
+	FrontendURL string
+	DB          PostgresConfig
+	JWT         JWTConfig
 }
 
 type PostgresConfig struct {
@@ -44,7 +45,8 @@ func LoadEnv() (*Config, error) {
 	}
 
 	cfg = &Config{
-		ServerPort: getString("SERVER_PORT"),
+		ServerPort:  getString("SERVER_PORT"),
+		FrontendURL: getString("FRONTEND_URL"),
 		DB: PostgresConfig{
 			URL:          getString("DB_URL"),
 			MaxOpenConns: getInt("DB_MAX_OPEN_CONNS"),
