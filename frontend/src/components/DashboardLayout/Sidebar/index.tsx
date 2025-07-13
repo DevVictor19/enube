@@ -21,6 +21,7 @@ interface SidebarItem {
   label: string;
   path: string;
   icon: React.ReactNode;
+  root?: string;
   onClick: () => void;
 }
 
@@ -36,48 +37,56 @@ export default function Sidebar() {
     },
     {
       label: "Customers",
+      root: APP_ROUTES.DASHBOARD,
       icon: <PersonIcon />,
       onClick: () => navigateTo(APP_ROUTES.CUSTOMERS),
       path: APP_ROUTES.CUSTOMERS,
     },
     {
       label: "Partners",
+      root: APP_ROUTES.DASHBOARD,
       icon: <HandshakeIcon />,
       onClick: () => navigateTo(APP_ROUTES.PARTNERS),
       path: APP_ROUTES.PARTNERS,
     },
     {
       label: "Charge Months",
+      root: APP_ROUTES.DASHBOARD,
       icon: <EventAvailableIcon />,
       onClick: () => navigateTo(APP_ROUTES.CHARGE_MONTHS),
       path: APP_ROUTES.CHARGE_MONTHS,
     },
     {
       label: "Usage Dates",
+      root: APP_ROUTES.DASHBOARD,
       icon: <QueryBuilderIcon />,
       onClick: () => navigateTo(APP_ROUTES.USAGE_DATES),
       path: APP_ROUTES.USAGE_DATES,
     },
     {
       label: "Billing Currencies",
+      root: APP_ROUTES.DASHBOARD,
       icon: <CurrencyExchangeIcon />,
       onClick: () => navigateTo(APP_ROUTES.BILLING_CURRENCIES),
       path: APP_ROUTES.BILLING_CURRENCIES,
     },
     {
       label: "Pricing Currencies",
+      root: APP_ROUTES.DASHBOARD,
       icon: <CurrencyExchangeIcon />,
       onClick: () => navigateTo(APP_ROUTES.PRICING_CURRENCIES),
       path: APP_ROUTES.PRICING_CURRENCIES,
     },
     {
       label: "Resource Locations",
+      root: APP_ROUTES.DASHBOARD,
       icon: <PublicIcon />,
       onClick: () => navigateTo(APP_ROUTES.RESOURCE_LOCATIONS),
       path: APP_ROUTES.RESOURCE_LOCATIONS,
     },
     {
       label: "Services",
+      root: APP_ROUTES.DASHBOARD,
       icon: <MiscellaneousServicesIcon />,
       onClick: () => navigateTo(APP_ROUTES.SERVICES),
       path: APP_ROUTES.SERVICES,
@@ -118,13 +127,16 @@ interface SidebarItemProps {
 }
 
 function SideBarItem({ item, pathname }: SidebarItemProps) {
+  let current = item.path;
+
+  if (item.root) {
+    current = item.root + "/" + item.path;
+  }
+
   return (
     <>
       <ListItem disablePadding>
-        <ListItemButton
-          selected={pathname === item.path}
-          onClick={item.onClick}
-        >
+        <ListItemButton selected={pathname === current} onClick={item.onClick}>
           <ListItemIcon>{item.icon}</ListItemIcon>
           <ListItemText primary={item.label} />
         </ListItemButton>
