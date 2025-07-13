@@ -48,7 +48,7 @@ func (ctl *CustomerRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var customers []Customer
+	customers := []Customer{}
 	for rows.Next() {
 		var c Customer
 		if err := rows.Scan(

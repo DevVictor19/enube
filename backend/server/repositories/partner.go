@@ -47,7 +47,7 @@ func (ctl *PartnerRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var partners []Partner
+	partners := []Partner{}
 	for rows.Next() {
 		var p Partner
 		if err := rows.Scan(

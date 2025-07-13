@@ -44,7 +44,7 @@ func (ctl *BillingCurrencyRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var currencies []BillingCurrency
+	currencies := []BillingCurrency{}
 	for rows.Next() {
 		var c BillingCurrency
 		if err := rows.Scan(

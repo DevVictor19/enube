@@ -45,7 +45,7 @@ func (ctl *ProductRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var products []Product
+	products := []Product{}
 	for rows.Next() {
 		var p Product
 		if err := rows.Scan(

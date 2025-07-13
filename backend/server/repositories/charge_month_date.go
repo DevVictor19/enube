@@ -45,7 +45,7 @@ func (ctl *MonthChargeDateRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var dates []MonthChargeDate
+	dates := []MonthChargeDate{}
 	for rows.Next() {
 		var m MonthChargeDate
 		if err := rows.Scan(

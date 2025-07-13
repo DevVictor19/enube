@@ -44,7 +44,7 @@ func (ctl *ResourceLocationRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var locations []ResourceLocation
+	locations := []ResourceLocation{}
 	for rows.Next() {
 		var r ResourceLocation
 		if err := rows.Scan(

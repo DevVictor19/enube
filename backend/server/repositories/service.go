@@ -44,7 +44,7 @@ func (ctl *ServiceRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var services []Service
+	services := []Service{}
 	for rows.Next() {
 		var s Service
 		if err := rows.Scan(

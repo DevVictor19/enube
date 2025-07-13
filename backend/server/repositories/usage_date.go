@@ -44,7 +44,7 @@ func (ctl *UsageDateRepository) FindPaginated(
 	}
 	defer rows.Close()
 
-	var dates []UsageDate
+	dates := []UsageDate{}
 	for rows.Next() {
 		var u UsageDate
 		if err := rows.Scan(
