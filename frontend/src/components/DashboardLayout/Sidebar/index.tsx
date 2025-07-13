@@ -87,9 +87,12 @@ export default function Sidebar() {
   return (
     <Paper
       sx={{
+        position: "fixed",
         flexGrow: 1,
+        flexShrink: 0,
         maxWidth: 260,
-        height: "calc(100vh - 64px)",
+        height: "100%",
+        minHeight: "calc(100vh - 64px)",
         marginTop: "64px",
       }}
     >

@@ -12,9 +12,10 @@ export default function DashboardLayout() {
         <Sidebar />
         <Box
           sx={{
-            flexGrow: 1,
             padding: 2,
-            marginTop: "64px", // Adjust for the height of the Navbar
+            width: "calc(100% - 240px)",
+            marginTop: "64px",
+            marginLeft: "240px",
           }}
         >
           <Outlet />
