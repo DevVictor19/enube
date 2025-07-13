@@ -38,3 +38,5 @@ export interface ChargeParams extends PaginationParams {
   "drl.resource_location_sk"?: number;
   "ds.service_sk"?: number;
 }
+
+export type ChargeFilter = keyof Omit<ChargeParams, "limit" | "page">;

@@ -1,10 +1,20 @@
 import DataGrid, { type DataGridColumn } from "../../../components/DataGrid";
 import { useFindAllCharges } from "../../../models/charges";
-import type { ChargeData } from "../../../services/dtos/charges";
+import type { ChargeData, ChargeParams } from "../../../services/dtos/charges";
 import { formatISODate } from "../../../utils/format";
 
-export default function DataTableContainer() {
-  const { data, isLoading, isError } = useFindAllCharges();
+interface DataTableContainerProps {
+  params: ChargeParams;
+  onChangeLimit: (newLimit: number) => void;
+  onChangePage: (newPage: number) => void;
+}
+
+export default function DataTableContainer({
+  onChangeLimit,
+  onChangePage,
+  params,
+}: DataTableContainerProps) {
+  const { data, isLoading, isError } = useFindAllCharges(params);
 
   if (isError) {
     return <div>Error loading data</div>;
@@ -62,8 +72,8 @@ export default function DataTableContainer() {
       isLoading={isLoading}
       primaryKey="charge_sk"
       maxHeight="60vh"
-      onChangeLimit={(data) => console.log("Change limit:", data)}
-      onChangePage={(data) => console.log("Change page:", data)}
+      onChangeLimit={onChangeLimit}
+      onChangePage={onChangePage}
     />
   );
 }

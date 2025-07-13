@@ -2,9 +2,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { formatCurrency } from "../../../utils/format";
 import { useGetChargesResume } from "../../../models/charges";
+import type { ChargeParams } from "../../../services/dtos/charges";
 
-export default function Resume() {
-  const { data } = useGetChargesResume();
+interface ResumeProps {
+  params: ChargeParams;
+}
+
+export default function Resume({ params }: ResumeProps) {
+  const { data } = useGetChargesResume(params);
 
   return (
     <Box mb={2}>

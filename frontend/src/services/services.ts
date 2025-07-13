@@ -10,5 +10,7 @@ export async function findAllServices(params?: PaginationParams) {
       params,
     }
   );
+
+  console.log(data);
   return data;
 }
