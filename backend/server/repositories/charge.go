@@ -28,10 +28,7 @@ func (r *ChargeRepository) FindPaginated(
 	filters map[string]any,
 ) (*types.PaginatedResult[ChargeData], error) {
 
-	offset, limit, err := utils.GetOffsetAndLimit(pagination)
-	if err != nil {
-		return nil, err
-	}
+	offset, limit := utils.GetOffsetAndLimit(pagination)
 
 	whereClause, args := utils.BuildWhereClause(filters)
 

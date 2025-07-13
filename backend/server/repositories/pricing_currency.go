@@ -26,10 +26,7 @@ func (ctl *PricingCurrencyRepository) FindPaginated(
 	pagination types.PaginationParams,
 ) (*types.PaginatedResult[PricingCurrency], error) {
 
-	offset, limit, err := utils.GetOffsetAndLimit(pagination)
-	if err != nil {
-		return nil, err
-	}
+	offset, limit := utils.GetOffsetAndLimit(pagination)
 
 	const query = `
 		SELECT 

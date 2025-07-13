@@ -34,7 +34,7 @@ func ParsePaginationParams(r *http.Request) types.PaginationParams {
 	}
 }
 
-func GetOffsetAndLimit(p types.PaginationParams) (int, int, error) {
+func GetOffsetAndLimit(p types.PaginationParams) (int, int) {
 	offset := (p.Page - 1) * p.Limit
-	return offset, p.Limit, nil
+	return offset, p.Limit
 }
