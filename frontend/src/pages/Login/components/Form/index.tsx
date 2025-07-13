@@ -21,6 +21,7 @@ export default function Form() {
             label="Email"
             variant="standard"
             placeholder="Enter your email"
+            autoComplete="email"
             error={Boolean(errors.email || isError)}
             helperText={errors.email?.message || (isError && "Login failed")}
             disabled={isPending}
@@ -36,6 +37,7 @@ export default function Form() {
             variant="standard"
             type="password"
             placeholder="Enter your password"
+            autoComplete="current-password"
             error={Boolean(errors.password) || isError}
             helperText={errors.password?.message}
             disabled={isPending}

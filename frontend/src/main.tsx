@@ -4,15 +4,18 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import CssBaseline from "@mui/material/CssBaseline";
 import QueryProvider from "./contexts/QueryContext.tsx";
+import CssBaseline from "@mui/material/CssBaseline";
+import { AuthContextProvider } from "./contexts/AuthContext.tsx";
+import Router from "./routes/router.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <CssBaseline />
     <QueryProvider>
-      <App />
+      <AuthContextProvider>
+        <CssBaseline />
+        <Router />
+      </AuthContextProvider>
     </QueryProvider>
   </StrictMode>
 );

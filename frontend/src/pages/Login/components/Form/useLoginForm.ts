@@ -2,9 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "./schema";
 import { useLogin } from "../../../../models/auth";
+import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 export function useLoginForm() {
   const { mutateAsync, isError, isPending } = useLogin();
+  const { handleSetToken } = useAuthContext();
 
   const {
     handleSubmit,
@@ -16,7 +18,8 @@ export function useLoginForm() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await mutateAsync(data);
+      const { token } = await mutateAsync(data);
+      handleSetToken(token);
     } catch (error) {
       console.error("Login failed:", error);
     }
