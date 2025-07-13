@@ -66,7 +66,7 @@ export default function DataGridPagination({
         />
       </Box>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Typography variant="body2">Página: {page}</Typography>
+        <Typography variant="body2">Page: {page}</Typography>
         <Box ml={1}>
           <IconButton onClick={prevPage}>
             <ChevronLeftIcon />
