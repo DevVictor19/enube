@@ -16,7 +16,8 @@ O projeto está dividido em três subprojetos:
 
 ## Como Executar
 
-1. Copie o conteúdo do arquivo `.env.example` para um novo arquivo `.env` na raiz do projeto e preencha com os dados necessários.
+1. Copie o conteúdo do arquivo `.env.example` para um novo arquivo `.env`, use o dados exatamente iguais para evitar problemas no setup.
+
 2. Suba o banco de dados via Docker executando na raiz do projeto:
 
    ```
@@ -64,6 +65,8 @@ Na pasta `/cmd` estão os comandos principais para rodar cada parte do projeto:
 Na pasta `/docs` você encontra a coleção do Postman com os endpoints da aplicação:
 
 - `/auth/login`
+- `/charges`
+- `/charges/resume`
 - `/customers`
 - `/partners`
 - `/products`
