@@ -16,15 +16,21 @@ O projeto está dividido em três subprojetos:
 
 ## Como Executar
 
-1. Copie o conteúdo do arquivo `.env.example` para um novo arquivo `.env`, use o dados exatamente iguais para evitar problemas no setup.
+1. Copie o conteúdo do arquivo `.env.example` para um novo arquivo `.env`, use os dados exatamente iguais para evitar problemas no setup.
 
-2. Suba o banco de dados via Docker executando na raiz do projeto:
+2. Na raiz do projeto, baixe as dependências do Go executando:
+
+   ```
+   go mod tidy
+   ```
+
+3. Suba o banco de dados via Docker executando:
 
    ```
    docker compose up -d
    ```
 
-3. Execute as migrações para criar as tabelas no banco:
+4. Execute as migrações para criar as tabelas no banco:
 
    ```
    go run cmd/migrate_up/migrate_up.go
