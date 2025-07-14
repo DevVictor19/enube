@@ -8,5 +8,6 @@ export const APP_ROUTES = {
   BILLING_CURRENCIES: "billing-currencies",
   PRICING_CURRENCIES: "pricing-currencies",
   RESOURCE_LOCATIONS: "resource-locations",
+  PRODUCTS: "products",
   SERVICES: "services",
 } as const;

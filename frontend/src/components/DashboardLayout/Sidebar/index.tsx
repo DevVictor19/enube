@@ -13,6 +13,7 @@ import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import PublicIcon from "@mui/icons-material/Public";
 import MiscellaneousServicesIcon from "@mui/icons-material/MiscellaneousServices";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 import Divider from "@mui/material/Divider";
 import { useSidebar } from "./useSidebar";
 import { APP_ROUTES } from "../../../constants/app-routes";
@@ -36,13 +37,6 @@ export default function Sidebar() {
       path: APP_ROUTES.DASHBOARD,
     },
     {
-      label: "Customers",
-      root: APP_ROUTES.DASHBOARD,
-      icon: <PersonIcon />,
-      onClick: () => navigateTo(APP_ROUTES.CUSTOMERS),
-      path: APP_ROUTES.CUSTOMERS,
-    },
-    {
       label: "Partners",
       root: APP_ROUTES.DASHBOARD,
       icon: <HandshakeIcon />,
@@ -50,18 +44,32 @@ export default function Sidebar() {
       path: APP_ROUTES.PARTNERS,
     },
     {
-      label: "Charge Months",
+      label: "Customers",
       root: APP_ROUTES.DASHBOARD,
-      icon: <EventAvailableIcon />,
-      onClick: () => navigateTo(APP_ROUTES.CHARGE_MONTHS),
-      path: APP_ROUTES.CHARGE_MONTHS,
+      icon: <PersonIcon />,
+      onClick: () => navigateTo(APP_ROUTES.CUSTOMERS),
+      path: APP_ROUTES.CUSTOMERS,
     },
     {
-      label: "Usage Dates",
+      label: "Products",
       root: APP_ROUTES.DASHBOARD,
-      icon: <QueryBuilderIcon />,
-      onClick: () => navigateTo(APP_ROUTES.USAGE_DATES),
-      path: APP_ROUTES.USAGE_DATES,
+      icon: <LocalMallIcon />,
+      onClick: () => navigateTo(APP_ROUTES.PRODUCTS),
+      path: APP_ROUTES.PRODUCTS,
+    },
+    {
+      label: "Resource Locations",
+      root: APP_ROUTES.DASHBOARD,
+      icon: <PublicIcon />,
+      onClick: () => navigateTo(APP_ROUTES.RESOURCE_LOCATIONS),
+      path: APP_ROUTES.RESOURCE_LOCATIONS,
+    },
+    {
+      label: "Services",
+      root: APP_ROUTES.DASHBOARD,
+      icon: <MiscellaneousServicesIcon />,
+      onClick: () => navigateTo(APP_ROUTES.SERVICES),
+      path: APP_ROUTES.SERVICES,
     },
     {
       label: "Billing Currencies",
@@ -78,18 +86,18 @@ export default function Sidebar() {
       path: APP_ROUTES.PRICING_CURRENCIES,
     },
     {
-      label: "Resource Locations",
+      label: "Usage Dates",
       root: APP_ROUTES.DASHBOARD,
-      icon: <PublicIcon />,
-      onClick: () => navigateTo(APP_ROUTES.RESOURCE_LOCATIONS),
-      path: APP_ROUTES.RESOURCE_LOCATIONS,
+      icon: <QueryBuilderIcon />,
+      onClick: () => navigateTo(APP_ROUTES.USAGE_DATES),
+      path: APP_ROUTES.USAGE_DATES,
     },
     {
-      label: "Services",
+      label: "Charge Months",
       root: APP_ROUTES.DASHBOARD,
-      icon: <MiscellaneousServicesIcon />,
-      onClick: () => navigateTo(APP_ROUTES.SERVICES),
-      path: APP_ROUTES.SERVICES,
+      icon: <EventAvailableIcon />,
+      onClick: () => navigateTo(APP_ROUTES.CHARGE_MONTHS),
+      path: APP_ROUTES.CHARGE_MONTHS,
     },
   ];
 

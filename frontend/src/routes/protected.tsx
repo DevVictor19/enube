@@ -10,6 +10,7 @@ import BillingCurrenciesPage from "../pages/BillingCurrencies";
 import PricingCurrenciesPage from "../pages/PricingCurrencies";
 import ResourceLocationsPage from "../pages/ResourceLocations";
 import ServicesPage from "../pages/Services";
+import ProductsPage from "../pages/Products";
 
 export default function ProtectedRoutes() {
   return (
@@ -36,6 +37,7 @@ export default function ProtectedRoutes() {
           element={<ResourceLocationsPage />}
         />
         <Route path={APP_ROUTES.SERVICES} element={<ServicesPage />} />
+        <Route path={APP_ROUTES.PRODUCTS} element={<ProductsPage />} />
       </Route>
       <Route
         path="*"
