@@ -33,6 +33,7 @@ func (ctl *PricingCurrencyRepository) FindPaginated(
 			pricing_currency_sk, 
 			currency
 		FROM dim_pricing_currencies
+		ORDER BY pricing_currency_sk
 		LIMIT $1 OFFSET $2;
 	`
 

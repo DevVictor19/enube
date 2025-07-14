@@ -34,6 +34,7 @@ func (ctl *MonthChargeDateRepository) FindPaginated(
 			charge_start_date, 
 			charge_end_date
 		FROM dim_months_charge_dates
+		ORDER BY months_charge_date_sk
 		LIMIT $1 OFFSET $2;
 	`
 

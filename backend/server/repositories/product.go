@@ -34,6 +34,7 @@ func (ctl *ProductRepository) FindPaginated(
 			product_id, 
 			product_name
 		FROM dim_products
+		ORDER BY product_sk
 		LIMIT $1 OFFSET $2;
 	`
 

@@ -37,6 +37,7 @@ func (ctl *CustomerRepository) FindPaginated(
 			customer_country, 
 			tier_2_mpn_id
 		FROM dim_customers
+		ORDER BY customer_sk
 		LIMIT $1 OFFSET $2;
 	`
 

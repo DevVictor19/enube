@@ -33,6 +33,7 @@ func (ctl *ServiceRepository) FindPaginated(
 			service_sk, 
 			service
 		FROM dim_services
+		ORDER BY service_sk
 		LIMIT $1 OFFSET $2;
 	`
 

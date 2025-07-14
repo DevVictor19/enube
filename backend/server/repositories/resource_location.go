@@ -33,6 +33,7 @@ func (ctl *ResourceLocationRepository) FindPaginated(
 			resource_location_sk, 
 			location
 		FROM dim_resource_locations
+		ORDER BY resource_location_sk
 		LIMIT $1 OFFSET $2;
 	`
 

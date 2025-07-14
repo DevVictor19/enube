@@ -36,6 +36,7 @@ func (ctl *PartnerRepository) FindPaginated(
 			mpn_id, 
 			invoice_number
 		FROM dim_partners
+		ORDER BY partner_sk
 		LIMIT $1 OFFSET $2;
 	`
 

@@ -33,6 +33,7 @@ func (ctl *UsageDateRepository) FindPaginated(
 			usage_date_sk, 
 			usage_date
 		FROM dim_usage_dates
+		ORDER BY usage_date_sk
 		LIMIT $1 OFFSET $2;
 	`
 
