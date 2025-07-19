@@ -13,7 +13,7 @@ export default function Form() {
       <Typography align="center" variant="h6" component="h1" mb={2}>
         Login
       </Typography>
-      <Grid component="form" container spacing={2}>
+      <Grid onSubmit={onSubmit} component="form" container spacing={2}>
         <Grid size={12}>
           <TextFieldControlled
             control={control}
@@ -48,7 +48,7 @@ export default function Form() {
           <Button
             variant="contained"
             fullWidth
-            onClick={onSubmit}
+            type="submit"
             disabled={isPending}
             sx={{ mt: 2 }}
           >
