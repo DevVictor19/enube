@@ -27,7 +27,7 @@ start-imports:
 
 .PHONY: start-imports-v2
 start-imports-v2:
-	@go run cmd/import_data/import_data_v2.go	
+	@go run cmd/import_data_v2/import_data_v2.go	
 
 .PHONY: start-server
 start-server:
