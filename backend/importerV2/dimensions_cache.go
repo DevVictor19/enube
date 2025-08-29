@@ -7,12 +7,6 @@ import (
 	"github.com/DevVictor19/enube/backend/importerV2/helpers"
 )
 
-const availabilityInsertQR string = `INSERT INTO dim_availabilities (
-    availability_sk,
-    availability_id
-)
-VALUES `
-
 func getAvailability(row []string) (sql.NullInt32, []any) {
 	if len(row) <= availabilityIdIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -36,12 +30,6 @@ func getAvailability(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const benefitOrdersInsertQR = `INSERT INTO dim_benefit_orders (
-    benefit_order_sk,
-    benefit_order_id
-)
-VALUES `
-
 func getBenefitOrders(row []string) (sql.NullInt32, []any) {
 	if len(row) < 53 {
 		return sql.NullInt32{
@@ -56,7 +44,7 @@ func getBenefitOrders(row []string) (sql.NullInt32, []any) {
 		}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(benefitOrderId)
+	seq, new := benefitOrdersCache.NewEntry(benefitOrderId)
 	if new {
 		values := []any{
 			seq,
@@ -68,13 +56,6 @@ func getBenefitOrders(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const benefitsInsertQR string = `INSERT INTO dim_benefits (
-    benefit_sk,
-    benefit_id,
-    type
-)
-VALUES `
 
 func getBenefits(row []string) (sql.NullInt32, []any) {
 	if len(row) <= benefitTypeIndex {
@@ -88,7 +69,7 @@ func getBenefits(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(benefitId)
+	seq, new := benefitsCache.NewEntry(benefitId)
 	if new {
 		values := []any{
 			seq,
@@ -102,12 +83,6 @@ func getBenefits(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const billingCurrenciesInsertQR = `INSERT INTO dim_billing_currencies (
-    billing_currency_sk,
-    currency
-)
-VALUES `
-
 func getBillingCurrencies(row []string) (sql.NullInt32, []any) {
 	billingCurrency := row[billingCurrencyIndex]
 
@@ -115,7 +90,7 @@ func getBillingCurrencies(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(billingCurrency)
+	seq, new := billingCurrenciesCache.NewEntry(billingCurrency)
 	if new {
 		values := []any{
 			seq,
@@ -128,12 +103,6 @@ func getBillingCurrencies(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const chargeTypesInsertQR = `INSERT INTO dim_charge_types (
-    charge_type_sk,
-    type
-)
-VALUES `
-
 func getChargeTypes(row []string) (sql.NullInt32, []any) {
 	if len(row) <= chargeTypeIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -144,7 +113,7 @@ func getChargeTypes(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(chargeType)
+	seq, new := chargeTypesCache.NewEntry(chargeType)
 	if new {
 		values := []any{
 			seq,
@@ -156,16 +125,6 @@ func getChargeTypes(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const customerInsertQR string = `INSERT INTO dim_customers (
-    customer_sk,
-    customer_id,
-    customer_name,
-    customer_domain_name,
-    customer_country,
-    tier_2_mpn_id
-)
-VALUES `
 
 func getCustomers(row []string) (sql.NullInt32, []any) {
 	if len(row) <= tier2MpnIdIndex {
@@ -199,13 +158,6 @@ func getCustomers(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const entitlementsInsertQR = `INSERT INTO dim_entitlements (
-    entitlement_sk,
-    entitlement_id,
-    description
-)
-VALUES `
-
 func getEntitlements(row []string) (sql.NullInt32, []any) {
 	if len(row) <= entitlementDescriptionIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -218,7 +170,7 @@ func getEntitlements(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(entitlementId)
+	seq, new := entitlementsCache.NewEntry(entitlementId)
 	if new {
 		values := []any{
 			seq,
@@ -231,18 +183,6 @@ func getEntitlements(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const metersInsertQR = `INSERT INTO dim_meters (
-    meter_sk,
-    meter_id,
-    name,
-    category,
-    type,
-    subcategory,
-    region,
-    unit
-)
-VALUES `
 
 func getMeters(row []string) (sql.NullInt32, []any) {
 	if len(row) <= meterUnitIndex {
@@ -261,7 +201,7 @@ func getMeters(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(meterId)
+	seq, new := metersCache.NewEntry(meterId)
 	if new {
 		values := []any{
 			seq,
@@ -280,13 +220,6 @@ func getMeters(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const monthsChargeDatesInsertQR = `INSERT INTO dim_months_charge_dates (
-    months_charge_date_sk,
-    charge_start_date,
-    charge_end_date
-)
-VALUES `
-
 func getMonthsChargeDates(row []string) (sql.NullInt32, []any) {
 	if len(row) <= chargeEndDateIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -300,7 +233,7 @@ func getMonthsChargeDates(row []string) (sql.NullInt32, []any) {
 	}
 
 	key := fmt.Sprintf("%s|%s", chargeStartDate, chargeEndDate)
-	seq, new := availabilitiesCache.NewEntry(key)
+	seq, new := monthsChargeDatesCache.NewEntry(key)
 	if new {
 		values := []any{
 			seq,
@@ -312,14 +245,6 @@ func getMonthsChargeDates(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const partnerCreditsInsertQR = `INSERT INTO dim_partner_credits (
-    partner_credit_sk,
-    type,
-    percentage,
-    partner_earned_percentage
-)
-VALUES `
 
 func getPartnerCredits(row []string) (sql.NullInt32, []any) {
 	if len(row) <= partnerEarnedCreditPercentageIndex {
@@ -334,7 +259,7 @@ func getPartnerCredits(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(creditType)
+	seq, new := partnerCreditsCache.NewEntry(creditType)
 	if new {
 		values := []any{
 			seq,
@@ -347,15 +272,6 @@ func getPartnerCredits(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const partnersInsertQR = `INSERT INTO dim_partners (
-    partner_sk,
-    partner_id,
-    partner_name,
-    mpn_id,
-    invoice_number
-)
-VALUES `
 
 func getPartners(row []string) (sql.NullInt32, []any) {
 	if len(row) <= invoiceNumberIndex {
@@ -371,7 +287,7 @@ func getPartners(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(partnerId)
+	seq, new := partnersCache.NewEntry(partnerId)
 	if new {
 		values := []any{
 			seq,
@@ -386,12 +302,6 @@ func getPartners(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const pricingCurrenciesInsertQR = `INSERT INTO dim_pricing_currencies (
-    pricing_currency_sk,
-    currency
-)
-VALUES `
-
 func getPricingCurrencies(row []string) (sql.NullInt32, []any) {
 	pricingCurrency := row[pricingCurrencyIndex]
 
@@ -399,7 +309,7 @@ func getPricingCurrencies(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(pricingCurrency)
+	seq, new := pricingCurrenciesCache.NewEntry(pricingCurrency)
 	if new {
 		values := []any{
 			seq,
@@ -410,13 +320,6 @@ func getPricingCurrencies(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const productsInsertQR = `INSERT INTO dim_products (
-    product_sk,
-    product_id,
-    product_name
-)
-VALUES `
 
 func getProducts(row []string) (sql.NullInt32, []any) {
 	if len(row) <= productNameIndex {
@@ -430,7 +333,7 @@ func getProducts(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(productId)
+	seq, new := productsCache.NewEntry(productId)
 	if new {
 		values := []any{
 			seq,
@@ -442,13 +345,6 @@ func getProducts(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const publishersInsertQR = `INSERT INTO dim_publishers (
-    publisher_sk,
-    publisher_id,
-    publisher_name
-)
-VALUES `
 
 func getPublishers(row []string) (sql.NullInt32, []any) {
 	if len(row) <= publisherNameIndex {
@@ -462,7 +358,7 @@ func getPublishers(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(publisherId)
+	seq, new := publishersCache.NewEntry(publisherId)
 	if new {
 		values := []any{
 			seq,
@@ -475,12 +371,6 @@ func getPublishers(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const resourceGroupsInsertQR = `INSERT INTO dim_resource_groups (
-    resource_group_sk,
-    name
-)
-VALUES `
-
 func getResourceGroups(row []string) (sql.NullInt32, []any) {
 	if len(row) <= resourceGroupIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -491,7 +381,7 @@ func getResourceGroups(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(name)
+	seq, new := resourceGroupsCache.NewEntry(name)
 	if new {
 		values := []any{
 			seq,
@@ -503,12 +393,6 @@ func getResourceGroups(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const resourceLocationsInsertQR = `INSERT INTO dim_resource_locations (
-    resource_location_sk,
-    location
-)
-VALUES `
-
 func getResourceLocations(row []string) (sql.NullInt32, []any) {
 	if len(row) <= resourceLocationIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -519,7 +403,7 @@ func getResourceLocations(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(location)
+	seq, new := resourceLocationsCache.NewEntry(location)
 	if new {
 		values := []any{
 			seq,
@@ -531,12 +415,6 @@ func getResourceLocations(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const servicesInsertQR = `INSERT INTO dim_services (
-    service_sk,
-    service
-)
-VALUES `
-
 func getServices(row []string) (sql.NullInt32, []any) {
 	if len(row) <= consumedServiceIndex {
 		return sql.NullInt32{Valid: false}, nil
@@ -547,7 +425,7 @@ func getServices(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(service)
+	seq, new := servicesCache.NewEntry(service)
 	if new {
 		values := []any{
 			seq,
@@ -558,13 +436,6 @@ func getServices(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const skusInsertQR = `INSERT INTO dim_skus (
-    sku_sk,
-    sku_id,
-    sku_name
-)
-VALUES `
 
 func getSkus(row []string) (sql.NullInt32, []any) {
 	if len(row) <= skuNameIndex {
@@ -578,7 +449,7 @@ func getSkus(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(skuId)
+	seq, new := skusCache.NewEntry(skuId)
 	if new {
 		values := []any{
 			seq,
@@ -591,13 +462,6 @@ func getSkus(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const subscriptionsInsertQR = `INSERT INTO dim_subscriptions (
-    subscription_sk,
-    subscription_id,
-    description
-)
-VALUES `
-
 func getSubscriptions(row []string) (sql.NullInt32, []any) {
 	subscriptionId := row[subscriptionIdIndex]
 	description := row[subscriptionDescriptionIndex]
@@ -606,7 +470,7 @@ func getSubscriptions(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(subscriptionId)
+	seq, new := subscriptionsCache.NewEntry(subscriptionId)
 	if new {
 		values := []any{
 			seq,
@@ -619,12 +483,6 @@ func getSubscriptions(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const unitTypesInsertQR = `INSERT INTO dim_unit_types (
-    unit_type_sk,
-    type
-)
-VALUES `
-
 func getUnitTypes(row []string) (sql.NullInt32, []any) {
 	unitType := row[unitTypeIndex]
 
@@ -632,7 +490,7 @@ func getUnitTypes(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(unitType)
+	seq, new := unitTypesCache.NewEntry(unitType)
 	if new {
 		values := []any{
 			seq,
@@ -644,12 +502,6 @@ func getUnitTypes(row []string) (sql.NullInt32, []any) {
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
 
-const usageDatesInsertQR = `INSERT INTO dim_usage_dates (
-    usage_date_sk,
-    usage_date
-)
-VALUES `
-
 func getUsageDates(row []string) (sql.NullInt32, []any) {
 	usageDate := row[usageDateIndex]
 
@@ -657,7 +509,7 @@ func getUsageDates(row []string) (sql.NullInt32, []any) {
 		return sql.NullInt32{Valid: false}, nil
 	}
 
-	seq, new := availabilitiesCache.NewEntry(usageDate)
+	seq, new := usageDatesCache.NewEntry(usageDate)
 	if new {
 		values := []any{
 			seq,
@@ -668,40 +520,3 @@ func getUsageDates(row []string) (sql.NullInt32, []any) {
 
 	return sql.NullInt32{Valid: true, Int32: seq}, nil
 }
-
-const factChargesInsertQR string = `INSERT INTO act_charges (
-    partner_sk,
-    months_charge_date_sk,
-    customer_sk,
-    meter_sk,
-    product_sk,
-    sku_sk,
-    publisher_sk,
-    subscription_sk,
-    resource_location_sk,
-    resource_group_sk,
-    service_sk,
-    charge_type_sk,
-    unit_type_sk,
-    entitlement_sk,
-    partner_credit_sk,
-    benefit_sk,
-    benefit_order_sk,
-    availability_sk,
-    usage_date_sk,
-    billing_currency_sk,
-    pricing_currency_sk,
-    resource_uri,
-    effective_unit_price,
-    unit_price,
-    quantity,
-    billing_pre_tax_total,
-    pricing_pre_tax_total,
-    pc_to_bc_exchange_rate,
-    pc_to_bc_exchange_rate_date,
-    service_info_1,
-    service_info_2,
-    tags,
-    additional_info
-)
-VALUES `
