@@ -2,105 +2,46 @@ package importerV2
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
+	"github.com/DevVictor19/enube/backend/importerV2/database"
 	"github.com/DevVictor19/enube/backend/importerV2/helpers"
 )
 
-var mu sync.Mutex
-var c = make(chan map[tableName][]any)
+var (
+	insertsWG        sync.WaitGroup
+	valuesMap        = insert{}
+	rowProcessed     = 0
+	maxRowsToProcess = 1500
+)
 
-func prepareStatement(row []string) {
-	defer mu.Unlock()
-	mu.Lock()
+type insert struct {
+	availabilities    []any
+	benefitOrders     []any
+	benefits          []any
+	billingCurrencies []any
+	chargeTypes       []any
+	customers         []any
+	entitlements      []any
+	meters            []any
+	monthsChargeDates []any
+	partnerCredits    []any
+	partners          []any
+	pricingCurrencies []any
+	products          []any
+	publishers        []any
+	resourceGroups    []any
+	resourceLocations []any
+	services          []any
+	skus              []any
+	subscriptions     []any
+	unitTypes         []any
+	usageDates        []any
+	factCharges       []any
+}
 
-	vMap := make(map[tableName][]any)
-
-	customerSK, values := getCustomers(row)
-	if values != nil {
-		vMap[customersTable] = values
-	}
-	chargeTypeSK, values := getChargeTypes(row)
-	if values != nil {
-		vMap[chargeTypesTable] = values
-	}
-	billingCurrencySK, values := getBillingCurrencies(row)
-	if values != nil {
-		vMap[billingCurrenciesTable] = values
-	}
-	entitlementSK, values := getEntitlements(row)
-	if values != nil {
-		vMap[entitlementsTable] = values
-	}
-	meterSK, values := getMeters(row)
-	if values != nil {
-		vMap[metersTable] = values
-	}
-	monthsChargeDateSK, values := getMonthsChargeDates(row)
-	if values != nil {
-		vMap[monthsChargeDatesTable] = values
-	}
-	partnerCreditSK, values := getPartnerCredits(row)
-	if values != nil {
-		vMap[partnerCreditsTable] = values
-	}
-	partnerSK, values := getPartners(row)
-	if values != nil {
-		vMap[partnersTable] = values
-	}
-	pricingCurrencySK, values := getPricingCurrencies(row)
-	if values != nil {
-		vMap[pricingCurrenciesTable] = values
-	}
-	productSK, values := getProducts(row)
-	if values != nil {
-		vMap[productsTable] = values
-	}
-	publisherSK, values := getPublishers(row)
-	if values != nil {
-		vMap[publishersTable] = values
-	}
-	resourceGroupSK, values := getResourceGroups(row)
-	if values != nil {
-		vMap[resourceGroupsTable] = values
-	}
-	resourceLocationSK, values := getResourceLocations(row)
-	if values != nil {
-		vMap[resourceLocationsTable] = values
-	}
-	serviceSK, values := getServices(row)
-	if values != nil {
-		vMap[servicesTable] = values
-	}
-	skuSK, values := getSkus(row)
-	if values != nil {
-		vMap[skusTable] = values
-	}
-	subscriptionSK, values := getSubscriptions(row)
-	if values != nil {
-		vMap[subscriptionsTable] = values
-	}
-	unitTypeSK, values := getUnitTypes(row)
-	if values != nil {
-		vMap[unitTypesTable] = values
-	}
-	usageDateSK, values := getUsageDates(row)
-	if values != nil {
-		vMap[usageDatesTable] = values
-	}
-	benefitsSK, values := getBenefits(row)
-	if values != nil {
-		vMap[benefitsTable] = values
-	}
-	benefitsOrderSK, values := getBenefitOrders(row)
-	if values != nil {
-		vMap[benefitOrdersTable] = values
-	}
-	availabilitySK, values := getAvailability(row)
-	if values != nil {
-		vMap[availabilitiesTable] = values
-	}
-
+func processRow(row []string) {
 	resourceUri := row[resourceUriIndex]
 	effectiveUnitPrice := row[effectiveUnitPriceIndex]
 	unitPrice := row[unitPriceIndex]
@@ -114,28 +55,28 @@ func prepareStatement(row []string) {
 	tags := row[tagsIndex]
 	additionalInfo := row[additionalInfoIndex]
 
-	values = []any{
-		partnerSK,
-		monthsChargeDateSK,
-		customerSK,
-		meterSK,
-		productSK,
-		skuSK,
-		publisherSK,
-		subscriptionSK,
-		resourceLocationSK,
-		resourceGroupSK,
-		serviceSK,
-		chargeTypeSK,
-		unitTypeSK,
-		entitlementSK,
-		partnerCreditSK,
-		benefitsSK,
-		benefitsOrderSK,
-		availabilitySK,
-		usageDateSK,
-		billingCurrencySK,
-		pricingCurrencySK,
+	valuesMap.factCharges = append(valuesMap.factCharges,
+		getPartnersSK(row),
+		getMonthsChargeDatesSK(row),
+		getCustomersSK(row),
+		getMetersSK(row),
+		getProductsSK(row),
+		getSkusSK(row),
+		getPublishersSK(row),
+		getSubscriptionsSK(row),
+		getResourceLocationsSK(row),
+		getResourceGroupsSK(row),
+		getServicesSK(row),
+		getChargeTypesSK(row),
+		getUnitTypesSK(row),
+		getEntitlementsSK(row),
+		getPartnerCreditsSK(row),
+		getBenefitsSK(row),
+		getBenefitOrdersSK(row),
+		getAvailabilitySK(row),
+		getUsageDatesSK(row),
+		getBillingCurrenciesSK(row),
+		getPricingCurrenciesSK(row),
 		resourceUri,
 		helpers.ToNullableFloat64(effectiveUnitPrice),
 		helpers.ToNullableFloat64(unitPrice),
@@ -147,28 +88,147 @@ func prepareStatement(row []string) {
 		serviceInfo1,
 		serviceInfo2,
 		tags,
-		additionalInfo,
+		additionalInfo)
+
+	rowProcessed++
+
+	if rowProcessed == maxRowsToProcess {
+		insertsWG.Add(1)
+		go bachInsert(valuesMap, rowProcessed, &insertsWG)
+		valuesMap = insert{}
+		rowProcessed = 0
 	}
-
-	vMap[factChargesTable] = values
-
-	c <- vMap
 }
 
-func batchMonitor(maxLinesPerBatch int) {
-	fmt.Println("Initializing batch monitor... maxLinesPerBatch:", maxLinesPerBatch)
-	lines := 0
+func bachInsert(valuesMap insert, rows int, wg *sync.WaitGroup) {
+	if wg != nil {
+		defer wg.Done()
+	}
 
-	for {
-		vMap := <-c
-		if len(vMap) > 0 {
-			fmt.Println(vMap)
-		}
-		lines++
+	fmt.Printf("Executing batch insert of %d rows....\n", rows)
 
-		if lines >= maxLinesPerBatch {
-			fmt.Println("Executing batch....")
-			lines = 0
-		}
+	db, err := database.Get()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tx, err := db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := tx.Exec(getAvailabilityStm(valuesMap.availabilities), valuesMap.availabilities...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_availabilities err:", err)
+	}
+
+	if _, err := tx.Exec(getBenefitOrderStm(valuesMap.benefitOrders), valuesMap.benefitOrders...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_benefit_order err:", err)
+	}
+
+	if _, err := tx.Exec(getBenefitStm(valuesMap.benefits), valuesMap.benefits...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_benefit err:", err)
+	}
+
+	if _, err := tx.Exec(getChargeTypeStm(valuesMap.chargeTypes), valuesMap.chargeTypes...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_charge_type err:", err)
+	}
+
+	if _, err := tx.Exec(getCustomerStm(valuesMap.customers), valuesMap.customers...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_customers err:", err)
+	}
+
+	if _, err := tx.Exec(getEntitlementStm(valuesMap.entitlements), valuesMap.entitlements...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_entitlement err:", err)
+	}
+
+	if _, err := tx.Exec(getMeterStm(valuesMap.meters), valuesMap.meters...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_meters err:", err)
+	}
+
+	if _, err := tx.Exec(getMonthsChargeDateStm(valuesMap.monthsChargeDates), valuesMap.monthsChargeDates...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_months_charge_date err:", err)
+	}
+
+	if _, err := tx.Exec(getPartnerCreditStm(valuesMap.partnerCredits), valuesMap.partnerCredits...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_partner_credit err:", err)
+	}
+
+	if _, err := tx.Exec(getPartnerStm(valuesMap.partners), valuesMap.partners...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_partner err:", err)
+	}
+
+	if _, err := tx.Exec(getProductStm(valuesMap.products), valuesMap.products...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_product err:", err)
+	}
+
+	if _, err := tx.Exec(getPublisherStm(valuesMap.publishers), valuesMap.publishers...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_publisher err:", err)
+	}
+
+	if _, err := tx.Exec(getResourceGroupStm(valuesMap.resourceGroups), valuesMap.resourceGroups...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_resource_group err:", err)
+	}
+
+	if _, err := tx.Exec(getResourceLocationStm(valuesMap.resourceLocations), valuesMap.resourceLocations...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_resource_location err:", err)
+	}
+
+	if _, err := tx.Exec(getServiceStm(valuesMap.services), valuesMap.services...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_service err:", err)
+	}
+
+	if _, err := tx.Exec(getSkuStm(valuesMap.skus), valuesMap.skus...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_sku err:", err)
+	}
+
+	if _, err := tx.Exec(getSubscriptionStm(valuesMap.subscriptions), valuesMap.subscriptions...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_subscription err:", err)
+	}
+
+	if _, err := tx.Exec(getUnitTypeStm(valuesMap.unitTypes), valuesMap.unitTypes...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_unit_type err:", err)
+	}
+
+	if _, err := tx.Exec(getUsageDateStm(valuesMap.usageDates), valuesMap.usageDates...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_usage_dates err:", err)
+	}
+
+	if _, err := tx.Exec(getBillingCurrencyStm(valuesMap.billingCurrencies), valuesMap.billingCurrencies...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_billing_currencies err:", err)
+	}
+
+	if _, err := tx.Exec(getPricingCurrencyStm(valuesMap.pricingCurrencies), valuesMap.pricingCurrencies...); err != nil {
+		tx.Rollback()
+		log.Fatal("dim_pricing_currencies err:", err)
+	}
+
+	if _, err := tx.Exec(getFactChargesStm(valuesMap.factCharges), valuesMap.factCharges...); err != nil {
+		tx.Rollback()
+		log.Fatal("fact_charge err:", err)
+	}
+
+	// Commit da transação
+	if err := tx.Commit(); err != nil {
+		log.Fatal("Err on commit:", err)
 	}
 }

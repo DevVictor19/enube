@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/DevVictor19/enube/backend/importer/database"
+	"github.com/DevVictor19/enube/backend/importerV2/database"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -37,8 +37,7 @@ func StartImports() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	go batchMonitor(10000)
+	defer rows.Close()
 
 	isFirstRow := true
 	for rows.Next() {
@@ -52,8 +51,11 @@ func StartImports() {
 			log.Fatal(err)
 		}
 
-		go prepareStatement(row)
+		processRow(row)
 	}
+	insertsWG.Wait()
+
+	bachInsert(valuesMap, rowProcessed, nil)
 
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
