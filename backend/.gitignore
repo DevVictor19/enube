@@ -2,6 +2,7 @@ tmp
 .env
 .envrc
 bin/
+importerV2/files/chunks
 
 # Logs
 logs

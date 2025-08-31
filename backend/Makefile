@@ -29,6 +29,10 @@ start-imports:
 start-imports-v2:
 	@go run cmd/import_data_v2/import_data_v2.go	
 
+.PHONY: split-excel
+split-excel:
+	@go run cmd/split_excel/split_excel.go		
+
 .PHONY: start-server
 start-server:
 	@echo server listening on http://localhost:${SERVER_PORT}/api/v1/health

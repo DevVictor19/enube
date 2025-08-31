@@ -12,7 +12,7 @@ import (
 var (
 	insertsWG        sync.WaitGroup
 	valuesMap        = insert{}
-	rowProcessed     = 0
+	rowsProcessed    = 0
 	maxRowsToProcess = 1500
 )
 
@@ -90,13 +90,13 @@ func processRow(row []string) {
 		tags,
 		additionalInfo)
 
-	rowProcessed++
+	rowsProcessed++
 
-	if rowProcessed == maxRowsToProcess {
+	if rowsProcessed == maxRowsToProcess {
 		insertsWG.Add(1)
-		go bachInsert(valuesMap, rowProcessed, &insertsWG)
+		go bachInsert(valuesMap, rowsProcessed, &insertsWG)
 		valuesMap = insert{}
-		rowProcessed = 0
+		rowsProcessed = 0
 	}
 }
 
