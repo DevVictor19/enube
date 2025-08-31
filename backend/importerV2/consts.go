@@ -1,27 +1,27 @@
 package importerV2
 
 var (
-	availabilitiesCache    tableCache
-	benefitOrdersCache     tableCache
-	benefitsCache          tableCache
-	billingCurrenciesCache tableCache
-	chargeTypesCache       tableCache
-	customersCache         tableCache
-	entitlementsCache      tableCache
-	metersCache            tableCache
-	monthsChargeDatesCache tableCache
-	partnerCreditsCache    tableCache
-	partnersCache          tableCache
-	pricingCurrenciesCache tableCache
-	productsCache          tableCache
-	publishersCache        tableCache
-	resourceGroupsCache    tableCache
-	resourceLocationsCache tableCache
-	servicesCache          tableCache
-	skusCache              tableCache
-	subscriptionsCache     tableCache
-	unitTypesCache         tableCache
-	usageDatesCache        tableCache
+	availabilitiesCache    *tableCache = newTableCache()
+	benefitOrdersCache     *tableCache = newTableCache()
+	benefitsCache          *tableCache = newTableCache()
+	billingCurrenciesCache *tableCache = newTableCache()
+	chargeTypesCache       *tableCache = newTableCache()
+	customersCache         *tableCache = newTableCache()
+	entitlementsCache      *tableCache = newTableCache()
+	metersCache            *tableCache = newTableCache()
+	monthsChargeDatesCache *tableCache = newTableCache()
+	partnerCreditsCache    *tableCache = newTableCache()
+	partnersCache          *tableCache = newTableCache()
+	pricingCurrenciesCache *tableCache = newTableCache()
+	productsCache          *tableCache = newTableCache()
+	publishersCache        *tableCache = newTableCache()
+	resourceGroupsCache    *tableCache = newTableCache()
+	resourceLocationsCache *tableCache = newTableCache()
+	servicesCache          *tableCache = newTableCache()
+	skusCache              *tableCache = newTableCache()
+	subscriptionsCache     *tableCache = newTableCache()
+	unitTypesCache         *tableCache = newTableCache()
+	usageDatesCache        *tableCache = newTableCache()
 )
 
 const (

@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/DevVictor19/enube/backend/importerV2/database"
@@ -22,42 +23,19 @@ func StartImports() {
 	}
 	defer db.Close()
 
-	f, err := excelize.OpenFile(getExcelFilepath())
-	if err != nil {
-		log.Fatal(err)
+	fmt.Println("Starting imports...")
+
+	chunks := getCSVFilepathChunks()
+
+	var wg sync.WaitGroup
+	for _, chunk := range chunks {
+		wg.Add(1)
+		go func(c string) {
+			defer wg.Done()
+			processCSV(c, 1500)
+		}(chunk)
 	}
-
-	defer func() {
-		if err := f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	sheetName := f.GetSheetList()[0]
-
-	rows, err := f.Rows(sheetName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	isFirstRow := true
-	for rows.Next() {
-		if isFirstRow {
-			isFirstRow = false
-			continue
-		}
-
-		row, err := rows.Columns()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		processRow(row)
-	}
-	insertsWG.Wait()
-
-	bachInsert(valuesMap, rowsProcessed, nil)
+	wg.Wait()
 
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
@@ -169,6 +147,7 @@ func getExcelFilepath() string {
 	if !ok {
 		log.Fatal("could not get current file path")
 	}
+
 	currentDirPath := filepath.Dir(filename)
 	dataFile := "reconfile-fornecedores.xlsx"
 	return filepath.Join(currentDirPath, "files", dataFile)
@@ -179,11 +158,35 @@ func getCSVChunkFilepath(chunk int) string {
 	if !ok {
 		log.Fatal("could not get current file path")
 	}
+
 	currentDirPath := filepath.Dir(filename)
 	chunksDir := filepath.Join(currentDirPath, "files", "chunks")
 	if err := os.MkdirAll(chunksDir, os.ModePerm); err != nil {
 		log.Fatalf("could not create directory %s: %v", chunksDir, err)
 	}
+
 	dataFile := fmt.Sprintf("chunk_%d.csv", chunk)
 	return filepath.Join(chunksDir, dataFile)
+}
+
+func getCSVFilepathChunks() []string {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("could not get current file path")
+	}
+	currentDirPath := filepath.Dir(filename)
+	chunksDir := filepath.Join(currentDirPath, "files", "chunks")
+
+	entries, err := os.ReadDir(chunksDir)
+	if err != nil {
+		log.Fatalf("could not read directory %s: %v", chunksDir, err)
+	}
+
+	var files []string
+	for _, entry := range entries {
+		if !entry.IsDir() && filepath.Ext(entry.Name()) == ".csv" {
+			files = append(files, filepath.Join(chunksDir, entry.Name()))
+		}
+	}
+	return files
 }
