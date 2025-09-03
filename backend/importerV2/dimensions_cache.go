@@ -1,243 +1,209 @@
 package importerV2
 
 import (
-	"database/sql"
 	"fmt"
-
-	"github.com/DevVictor19/enube/backend/importerV2/helpers"
 )
 
-func getAvailabilitySK(row []string, values *[]any) sql.NullInt32 {
+func getAvailabilitySK(row []string) (string, []string) {
 	if len(row) <= availabilityIdIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	availabilityId := row[availabilityIdIndex]
 	if availabilityId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := availabilitiesCache.Get(availabilityId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := availabilitiesCache.NewEntry(availabilityId)
+	if new {
+		return seq, []string{seq, availabilityId}
 	}
 
-	seq = availabilitiesCache.Set(availabilityId)
-	*values = append(*values, seq, availabilityId)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getBenefitOrdersSK(row []string, values *[]any) sql.NullInt32 {
+func getBenefitOrdersSK(row []string) (string, []string) {
 	if len(row) <= benefitOrderIdIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	benefitOrderId := row[benefitOrderIdIndex]
 	if benefitOrderId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := benefitOrdersCache.Get(benefitOrderId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := benefitOrdersCache.NewEntry(benefitOrderId)
+	if new {
+		return seq, []string{seq, benefitOrderId}
 	}
 
-	seq = benefitOrdersCache.Set(benefitOrderId)
-	*values = append(*values, seq, benefitOrderId)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getBenefitsSK(row []string, values *[]any) sql.NullInt32 {
+func getBenefitsSK(row []string) (string, []string) {
 	if len(row) <= benefitTypeIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	benefitId := row[benefitIdIndex]
 	benefitType := row[benefitTypeIndex]
 
 	if benefitId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := benefitsCache.Get(benefitId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := benefitsCache.NewEntry(benefitId)
+	if new {
+		return seq, []string{seq, benefitId, benefitType}
 	}
 
-	seq = benefitsCache.Set(benefitId)
-	*values = append(*values, seq, benefitId, benefitType)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getBillingCurrenciesSK(row []string, values *[]any) sql.NullInt32 {
+func getBillingCurrenciesSK(row []string) (string, []string) {
 	if len(row) <= billingCurrencyIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	billingCurrency := row[billingCurrencyIndex]
 	if billingCurrency == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := billingCurrenciesCache.Get(billingCurrency)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := billingCurrenciesCache.NewEntry(billingCurrency)
+	if new {
+		return seq, []string{seq, billingCurrency}
 	}
 
-	seq = billingCurrenciesCache.Set(billingCurrency)
-	*values = append(*values, seq, billingCurrency)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getChargeTypesSK(row []string, values *[]any) sql.NullInt32 {
+func getChargeTypesSK(row []string) (string, []string) {
 	if len(row) <= chargeTypeIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	chargeType := row[chargeTypeIndex]
 	if chargeType == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := chargeTypesCache.Get(chargeType)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := chargeTypesCache.NewEntry(chargeType)
+	if new {
+		return seq, []string{seq, chargeType}
 	}
 
-	seq = chargeTypesCache.Set(chargeType)
-	*values = append(*values, seq, chargeType)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getCustomersSK(row []string, values *[]any) sql.NullInt32 {
+func getCustomersSK(row []string) (string, []string) {
 	if len(row) <= tier2MpnIdIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	customerId := row[customerIdIndex]
 	if customerId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := customersCache.Get(customerId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := customersCache.NewEntry(customerId)
+	if new {
+		customerName := row[customerNameIndex]
+		customerDomain := row[customerDomainNameIndex]
+		customerCountry := row[customerCountryIndex]
+		tier2MpnId := row[tier2MpnIdIndex]
+
+		return seq, []string{seq, customerId,
+			customerName,
+			customerDomain,
+			customerCountry,
+			tier2MpnId,
+		}
 	}
 
-	seq = customersCache.Set(customerId)
-
-	customerName := row[customerNameIndex]
-	customerDomain := row[customerDomainNameIndex]
-	customerCountry := row[customerCountryIndex]
-	tier2MpnId := row[tier2MpnIdIndex]
-
-	*values = append(*values,
-		seq,
-		customerId,
-		customerName,
-		customerDomain,
-		customerCountry,
-		helpers.ToNullableInt64(tier2MpnId))
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getEntitlementsSK(row []string, values *[]any) sql.NullInt32 {
+func getEntitlementsSK(row []string) (string, []string) {
 	if len(row) <= entitlementDescriptionIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	entitlementId := row[entitlementIdIndex]
 	description := row[entitlementDescriptionIndex]
 
 	if entitlementId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := entitlementsCache.Get(entitlementId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := entitlementsCache.NewEntry(entitlementId)
+	if new {
+		return seq, []string{seq, entitlementId, description}
 	}
 
-	seq = entitlementsCache.Set(entitlementId)
-	*values = append(*values, seq, entitlementId, description)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getMetersSK(row []string, values *[]any) sql.NullInt32 {
+func getMetersSK(row []string) (string, []string) {
 	if len(row) <= meterUnitIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	meterId := row[meterIdIndex]
-	name := row[meterNameIndex]
-	category := row[meterCategoryIndex]
-	meterType := row[meterTypeIndex]
-	subcategory := row[meterSubCategoryIndex]
-	region := row[meterRegionIndex]
-	unit := row[meterUnitIndex]
 
 	if meterId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := metersCache.Get(meterId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := metersCache.NewEntry(meterId)
+	if new {
+		name := row[meterNameIndex]
+		category := row[meterCategoryIndex]
+		meterType := row[meterTypeIndex]
+		subcategory := row[meterSubCategoryIndex]
+		region := row[meterRegionIndex]
+		unit := row[meterUnitIndex]
+		return seq, []string{seq,
+			meterId,
+			name,
+			category,
+			meterType,
+			subcategory,
+			region,
+			unit,
+		}
 	}
 
-	seq = metersCache.Set(meterId)
-	*values = append(*values,
-		seq,
-		meterId,
-		name,
-		category,
-		meterType,
-		subcategory,
-		region,
-		unit,
-	)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getMonthsChargeDatesSK(row []string, values *[]any) sql.NullInt32 {
+func getMonthsChargeDatesSK(row []string) (string, []string) {
 	if len(row) <= chargeEndDateIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	chargeStartDate := row[chargeStartDateIndex]
 	chargeEndDate := row[chargeEndDateIndex]
 
 	if chargeStartDate == "" || chargeEndDate == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	key := fmt.Sprintf("%s|%s", chargeStartDate, chargeEndDate)
-	seq, found := monthsChargeDatesCache.Get(key)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := monthsChargeDatesCache.NewEntry(key)
+	if new {
+		return seq, []string{seq,
+			chargeStartDate,
+			chargeEndDate,
+		}
 	}
 
-	seq = monthsChargeDatesCache.Set(key)
-	*values = append(*values,
-		seq,
-		helpers.ToNullableDate(chargeStartDate),
-		helpers.ToNullableDate(chargeEndDate),
-	)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getPartnerCreditsSK(row []string, values *[]any) sql.NullInt32 {
+func getPartnerCreditsSK(row []string) (string, []string) {
 	if len(row) <= partnerEarnedCreditPercentageIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	creditType := row[creditTypeIndex]
@@ -245,265 +211,228 @@ func getPartnerCreditsSK(row []string, values *[]any) sql.NullInt32 {
 	partnerEarnedPercentage := row[partnerEarnedCreditPercentageIndex]
 
 	if creditType == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := partnerCreditsCache.Get(creditType)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := partnerCreditsCache.NewEntry(creditType)
+	if new {
+		return seq, []string{seq,
+			creditType,
+			percentage,
+			partnerEarnedPercentage,
+		}
 	}
 
-	seq = partnerCreditsCache.Set(creditType)
-	*values = append(*values,
-		seq,
-		creditType,
-		helpers.ToNullableFloat64(percentage),
-		helpers.ToNullableFloat64(partnerEarnedPercentage),
-	)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getPartnersSK(row []string, values *[]any) sql.NullInt32 {
+func getPartnersSK(row []string) (string, []string) {
 	if len(row) <= invoiceNumberIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	partnerId := row[partnerIdIndex]
-	partnerName := row[partnerNameIndex]
-	mpnId := row[mpnIdIndex]
-	invoiceNumber := row[invoiceNumberIndex]
 
 	if partnerId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := partnersCache.Get(partnerId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := partnersCache.NewEntry(partnerId)
+	if new {
+		partnerName := row[partnerNameIndex]
+		mpnId := row[mpnIdIndex]
+		invoiceNumber := row[invoiceNumberIndex]
+		return seq, []string{seq,
+			partnerId,
+			partnerName,
+			mpnId,
+			invoiceNumber,
+		}
 	}
 
-	seq = partnersCache.Set(partnerId)
-	*values = append(*values,
-		seq,
-		partnerId,
-		partnerName,
-		helpers.ToNullableInt64(mpnId),
-		invoiceNumber,
-	)
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getPricingCurrenciesSK(row []string, values *[]any) sql.NullInt32 {
+func getPricingCurrenciesSK(row []string) (string, []string) {
 	if len(row) <= pricingCurrencyIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	pricingCurrency := row[pricingCurrencyIndex]
 	if pricingCurrency == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := pricingCurrenciesCache.Get(pricingCurrency)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := pricingCurrenciesCache.NewEntry(pricingCurrency)
+	if new {
+		return seq, []string{seq, pricingCurrency}
 	}
 
-	seq = pricingCurrenciesCache.Set(pricingCurrency)
-	*values = append(*values, seq, pricingCurrency)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getProductsSK(row []string, values *[]any) sql.NullInt32 {
+func getProductsSK(row []string) (string, []string) {
 	if len(row) <= productNameIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	productId := row[productIdIndex]
 	productName := row[productNameIndex]
 
 	if productId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := productsCache.Get(productId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := productsCache.NewEntry(productId)
+	if new {
+		return seq, []string{seq, productId, productName}
 	}
 
-	seq = productsCache.Set(productId)
-	*values = append(*values, seq, productId, productName)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getPublishersSK(row []string, values *[]any) sql.NullInt32 {
+func getPublishersSK(row []string) (string, []string) {
 	if len(row) <= publisherNameIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	publisherId := row[publisherIdIndex]
 	publisherName := row[publisherNameIndex]
 
 	if publisherId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := publishersCache.Get(publisherId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := publishersCache.NewEntry(publisherId)
+	if new {
+		return seq, []string{seq, publisherId, publisherName}
 	}
 
-	seq = publishersCache.Set(publisherId)
-	*values = append(*values, seq, publisherId, publisherName)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getResourceGroupsSK(row []string, values *[]any) sql.NullInt32 {
+func getResourceGroupsSK(row []string) (string, []string) {
 	if len(row) <= resourceGroupIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	name := row[resourceGroupIndex]
 	if name == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := resourceGroupsCache.Get(name)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := resourceGroupsCache.NewEntry(name)
+	if new {
+		return seq, []string{seq, name}
 	}
 
-	seq = resourceGroupsCache.Set(name)
-	*values = append(*values, seq, name)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getResourceLocationsSK(row []string, values *[]any) sql.NullInt32 {
+func getResourceLocationsSK(row []string) (string, []string) {
 	if len(row) <= resourceLocationIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	location := row[resourceLocationIndex]
 	if location == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := resourceLocationsCache.Get(location)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := resourceLocationsCache.NewEntry(location)
+	if new {
+		return seq, []string{seq, location}
 	}
 
-	seq = resourceLocationsCache.Set(location)
-	*values = append(*values, seq, location)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getServicesSK(row []string, values *[]any) sql.NullInt32 {
+func getServicesSK(row []string) (string, []string) {
 	if len(row) <= consumedServiceIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	service := row[consumedServiceIndex]
 	if service == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := servicesCache.Get(service)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := servicesCache.NewEntry(service)
+	if new {
+		return seq, []string{seq, service}
 	}
 
-	seq = servicesCache.Set(service)
-	*values = append(*values, seq, service)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getSkusSK(row []string, values *[]any) sql.NullInt32 {
+func getSkusSK(row []string) (string, []string) {
 	if len(row) <= skuNameIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	skuId := row[skuIdIndex]
 	skuName := row[skuNameIndex]
 
 	if skuId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := skusCache.Get(skuId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := skusCache.NewEntry(skuId)
+	if new {
+		return seq, []string{seq, skuId, skuName}
 	}
 
-	seq = skusCache.Set(skuId)
-	*values = append(*values, seq, skuId, skuName)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getSubscriptionsSK(row []string, values *[]any) sql.NullInt32 {
+func getSubscriptionsSK(row []string) (string, []string) {
 	subscriptionId := row[subscriptionIdIndex]
 	description := row[subscriptionDescriptionIndex]
 
 	if subscriptionId == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := subscriptionsCache.Get(subscriptionId)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := subscriptionsCache.NewEntry(subscriptionId)
+	if new {
+		return seq, []string{seq, subscriptionId, description}
 	}
 
-	seq = subscriptionsCache.Set(subscriptionId)
-	*values = append(*values, seq, subscriptionId, description)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getUnitTypesSK(row []string, values *[]any) sql.NullInt32 {
+func getUnitTypesSK(row []string) (string, []string) {
 	if len(row) <= unitTypeIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	unitType := row[unitTypeIndex]
 	if unitType == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := unitTypesCache.Get(unitType)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := unitTypesCache.NewEntry(unitType)
+	if new {
+		return seq, []string{seq, unitType}
 	}
 
-	seq = unitTypesCache.Set(unitType)
-	*values = append(*values, seq, unitType)
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }
 
-func getUsageDatesSK(row []string, values *[]any) sql.NullInt32 {
+func getUsageDatesSK(row []string) (string, []string) {
 	if len(row) <= usageDateIndex {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
 	usageDate := row[usageDateIndex]
 	if usageDate == "" {
-		return sql.NullInt32{Valid: false}
+		return "", nil
 	}
 
-	seq, found := usageDatesCache.Get(usageDate)
-	if found {
-		return sql.NullInt32{Valid: true, Int32: seq}
+	seq, new := usageDatesCache.NewEntry(usageDate)
+	if new {
+		return seq, []string{seq, usageDate}
 	}
 
-	seq = usageDatesCache.Set(usageDate)
-	*values = append(*values, seq, helpers.ToNullableDate(usageDate))
-
-	return sql.NullInt32{Valid: true, Int32: seq}
+	return seq, nil
 }

@@ -25,17 +25,17 @@ func StartImports() {
 
 	fmt.Println("Starting imports...")
 
-	chunks := getCSVFilepathChunks()
+	// chunks := getCSVFilepathChunks()
 
-	var wg sync.WaitGroup
-	for _, chunk := range chunks {
-		wg.Add(1)
-		go func(c string) {
-			defer wg.Done()
-			processCSV(c, 1500)
-		}(chunk)
-	}
-	wg.Wait()
+	// var wg sync.WaitGroup
+	// for _, chunk := range chunks {
+	// 	wg.Add(1)
+	// 	go func(c string) {
+	// 		defer wg.Done()
+	// 		processCSV(c, 1500)
+	// 	}(chunk)
+	// }
+	// wg.Wait()
 
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
@@ -70,15 +70,19 @@ func SplitExcel() {
 	}
 	defer rows.Close()
 
-	var writer *csv.Writer
-	var out *os.File
+	chargeFile, err := os.Create(getCSVFilepath("fact_charges"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer chargeFile.Close()
 
-	chunks := 0
-	chunkSize := 10000 // rows
+	csvWriter := csv.NewWriter(chargeFile)
+	defer csvWriter.Flush()
+
+	dimCsvRows := make(map[string][][]string, 21)
 	rowsProcessed := 0
-	totalRowsProcessed := 0
-
 	isFirstRow := true
+
 	for rows.Next() {
 		if isFirstRow {
 			isFirstRow = false
@@ -90,46 +94,165 @@ func SplitExcel() {
 			log.Fatal(err)
 		}
 
-		if chunks == 0 {
-			chunks++
-
-			fmt.Printf("Creating new chunk %d\n", chunks)
-			out, err = os.Create(getCSVChunkFilepath(chunks))
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			writer = csv.NewWriter(out)
-		} else if rowsProcessed == chunkSize {
-			writer.Flush()
-			out.Close()
-			chunks++
-			totalRowsProcessed += rowsProcessed
-			rowsProcessed = 0
-
-			fmt.Printf("Creating new chunk %d\n", chunks)
-			out, err = os.Create(getCSVChunkFilepath(chunks))
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			writer = csv.NewWriter(out)
+		partnerSK, values := getPartnersSK(row)
+		if values != nil {
+			dimCsvRows["dim_partners"] = append(dimCsvRows["dim_partners"], values)
+		}
+		monthsChargeDatesSK, values := getMonthsChargeDatesSK(row)
+		if values != nil {
+			dimCsvRows["dim_months_charge_dates"] = append(dimCsvRows["dim_months_charge_dates"], values)
+		}
+		customersSK, values := getCustomersSK(row)
+		if values != nil {
+			dimCsvRows["dim_customers"] = append(dimCsvRows["dim_customers"], values)
+		}
+		metersSK, values := getMetersSK(row)
+		if values != nil {
+			dimCsvRows["dim_meters"] = append(dimCsvRows["dim_meters"], values)
+		}
+		productsSK, values := getProductsSK(row)
+		if values != nil {
+			dimCsvRows["dim_products"] = append(dimCsvRows["dim_products"], values)
+		}
+		skusSK, values := getSkusSK(row)
+		if values != nil {
+			dimCsvRows["dim_skus"] = append(dimCsvRows["dim_skus"], values)
+		}
+		publishersSK, values := getPublishersSK(row)
+		if values != nil {
+			dimCsvRows["dim_publishers"] = append(dimCsvRows["dim_publishers"], values)
+		}
+		subscriptionsSK, values := getSubscriptionsSK(row)
+		if values != nil {
+			dimCsvRows["dim_subscriptions"] = append(dimCsvRows["dim_subscriptions"], values)
+		}
+		resourceLocationsSK, values := getResourceLocationsSK(row)
+		if values != nil {
+			dimCsvRows["dim_resource_locations"] = append(dimCsvRows["dim_resource_locations"], values)
+		}
+		resourceGroupsSK, values := getResourceGroupsSK(row)
+		if values != nil {
+			dimCsvRows["dim_resource_groups"] = append(dimCsvRows["dim_resource_groups"], values)
+		}
+		servicesSK, values := getServicesSK(row)
+		if values != nil {
+			dimCsvRows["dim_services"] = append(dimCsvRows["dim_services"], values)
+		}
+		chargeTypesSK, values := getChargeTypesSK(row)
+		if values != nil {
+			dimCsvRows["dim_charge_types"] = append(dimCsvRows["dim_charge_types"], values)
+		}
+		unitTypesSK, values := getUnitTypesSK(row)
+		if values != nil {
+			dimCsvRows["dim_unit_types"] = append(dimCsvRows["dim_unit_types"], values)
+		}
+		entitlementsSK, values := getEntitlementsSK(row)
+		if values != nil {
+			dimCsvRows["dim_entitlements"] = append(dimCsvRows["dim_entitlements"], values)
+		}
+		partnerCreditsSK, values := getPartnerCreditsSK(row)
+		if values != nil {
+			dimCsvRows["dim_partner_credits"] = append(dimCsvRows["dim_partner_credits"], values)
+		}
+		benefitsSK, values := getBenefitsSK(row)
+		if values != nil {
+			dimCsvRows["dim_benefits"] = append(dimCsvRows["dim_benefits"], values)
+		}
+		benefitOrdersSK, values := getBenefitOrdersSK(row)
+		if values != nil {
+			dimCsvRows["dim_benefit_orders"] = append(dimCsvRows["dim_benefit_orders"], values)
+		}
+		availabilitySK, values := getAvailabilitySK(row)
+		if values != nil {
+			dimCsvRows["dim_availability"] = append(dimCsvRows["dim_availability"], values)
+		}
+		usageDatesSK, values := getUsageDatesSK(row)
+		if values != nil {
+			dimCsvRows["dim_usage_dates"] = append(dimCsvRows["dim_usage_dates"], values)
+		}
+		billingCurrenciesSK, values := getBillingCurrenciesSK(row)
+		if values != nil {
+			dimCsvRows["dim_billing_currencies"] = append(dimCsvRows["dim_billing_currencies"], values)
+		}
+		pricingCurrenciesSK, values := getPricingCurrenciesSK(row)
+		if values != nil {
+			dimCsvRows["dim_pricing_currencies"] = append(dimCsvRows["dim_pricing_currencies"], values)
 		}
 
-		if err := writer.Write(row); err != nil {
-			log.Fatal(err)
+		resourceUri := row[resourceUriIndex]
+		effectiveUnitPrice := row[effectiveUnitPriceIndex]
+		unitPrice := row[unitPriceIndex]
+		quantity := row[quantityIndex]
+		billingPreTaxTotal := row[billingPreTaxTotalIndex]
+		pricingPreTaxTotal := row[pricingPreTaxTotalIndex]
+		pcToBcExchangeRate := row[pcToBcExchangeRateIndex]
+		pcToBcExchangeRateDate := row[pcToBcExchangeRateDateIndex]
+		serviceInfo1 := row[serviceInfo1Index]
+		serviceInfo2 := row[serviceInfo2Index]
+		tags := row[tagsIndex]
+		additionalInfo := row[additionalInfoIndex]
+
+		factChargesRow := []string{
+			partnerSK,
+			monthsChargeDatesSK,
+			customersSK,
+			metersSK,
+			productsSK,
+			skusSK,
+			publishersSK,
+			subscriptionsSK,
+			resourceLocationsSK,
+			resourceGroupsSK,
+			servicesSK,
+			chargeTypesSK,
+			unitTypesSK,
+			entitlementsSK,
+			partnerCreditsSK,
+			benefitsSK,
+			benefitOrdersSK,
+			availabilitySK,
+			usageDatesSK,
+			billingCurrenciesSK,
+			pricingCurrenciesSK,
+			resourceUri,
+			effectiveUnitPrice,
+			unitPrice,
+			quantity,
+			billingPreTaxTotal,
+			pricingPreTaxTotal,
+			pcToBcExchangeRate,
+			pcToBcExchangeRateDate,
+			serviceInfo1,
+			serviceInfo2,
+			tags,
+			additionalInfo,
 		}
+
+		csvWriter.Write(factChargesRow)
 
 		rowsProcessed++
 	}
 
-	if rowsProcessed > 0 {
-		totalRowsProcessed += rowsProcessed
-		writer.Flush()
-		out.Close()
-	}
+	var wg sync.WaitGroup
+	for tableName, rows := range dimCsvRows {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			dimFile, err := os.Create(getCSVFilepath(tableName))
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer dimFile.Close()
 
-	fmt.Printf("Inserted %d rows...\n", totalRowsProcessed)
+			csvWriter := csv.NewWriter(dimFile)
+			defer csvWriter.Flush()
+
+			csvWriter.WriteAll(rows)
+		}()
+	}
+	wg.Wait()
+
+	fmt.Printf("Inserted %d rows...\n", rowsProcessed)
 
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
@@ -153,7 +276,7 @@ func getExcelFilepath() string {
 	return filepath.Join(currentDirPath, "files", dataFile)
 }
 
-func getCSVChunkFilepath(chunk int) string {
+func getCSVFilepath(name string) string {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("could not get current file path")
@@ -165,7 +288,7 @@ func getCSVChunkFilepath(chunk int) string {
 		log.Fatalf("could not create directory %s: %v", chunksDir, err)
 	}
 
-	dataFile := fmt.Sprintf("chunk_%d.csv", chunk)
+	dataFile := fmt.Sprintf("%s.csv", name)
 	return filepath.Join(chunksDir, dataFile)
 }
 

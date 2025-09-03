@@ -1,46 +1,34 @@
 package importerV2
 
-import "sync"
+import (
+	"strconv"
+)
 
 type tableCache struct {
-	seq  int32
-	vMap map[string]int32 // value | sequence
-	mu   sync.RWMutex
+	seq  int
+	vMap map[string]int // value | sequence
+
 }
 
 func newTableCache() *tableCache {
 	return &tableCache{
-		vMap: make(map[string]int32),
+		vMap: make(map[string]int),
 	}
 }
 
-// Returns the sequence and bool variable that represents if the value exists.
-//
-// If no value was found in cache, the sequence returned will be 0.
-func (c *tableCache) Get(value string) (int32, bool) {
+// Returns the corresponding sequence and a bool value indicating if the value was new
+func (c *tableCache) NewEntry(value string) (string, bool) {
 	if value == "" {
-		return 0, false
+		return "0", false
 	}
-
-	defer c.mu.RUnlock()
-	c.mu.RLock()
 
 	seq, ok := c.vMap[value]
 	if !ok {
-		return 0, false
+		c.seq++
+		seq = c.seq
+		c.vMap[value] = seq
+		return strconv.Itoa(seq), true
 	}
 
-	return seq, true
-}
-
-// Sets a new value in cache and returns the new sequence.
-func (c *tableCache) Set(value string) int32 {
-	defer c.mu.Unlock()
-	c.mu.Lock()
-
-	new := c.seq + 1
-	c.vMap[value] = new
-	c.seq = new
-
-	return new
+	return strconv.Itoa(seq), false
 }
