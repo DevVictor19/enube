@@ -69,6 +69,7 @@ func batchInsertCSV(fp string, maxRows int) {
 			fmt.Printf("Inserting %d rows into %s\n", rows, tableName)
 			insert(insertQR + helpers.BuildInsertValues(vals, cols))
 		}(rowsProcessed, values)
+		values = nil
 	}
 
 	wg.Wait()
