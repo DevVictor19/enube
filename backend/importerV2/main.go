@@ -1,6 +1,7 @@
 package importerV2
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"log"
@@ -56,12 +57,7 @@ func SplitExcel() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer func() {
-		if err := f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
+	defer f.Close()
 
 	sheetName := f.GetSheetList()[0]
 	rows, err := f.Rows(sheetName)
@@ -76,7 +72,10 @@ func SplitExcel() {
 	}
 	defer chargeFile.Close()
 
-	csvWriter := csv.NewWriter(chargeFile)
+	buffWriter := bufio.NewWriterSize(chargeFile, 1024*64) // 64KB buffer
+	defer buffWriter.Flush()
+
+	csvWriter := csv.NewWriter(buffWriter)
 	defer csvWriter.Flush()
 
 	dimCsvRows := make(map[string][][]string, 21)
@@ -234,10 +233,11 @@ func SplitExcel() {
 	}
 
 	var wg sync.WaitGroup
+	wg.Add(len(dimCsvRows))
 	for tableName, rows := range dimCsvRows {
-		wg.Add(1)
 		go func() {
 			defer wg.Done()
+			fmt.Printf("Writing %s with %d rows...\n", tableName, len(rows))
 			dimFile, err := os.Create(getCSVFilepath(tableName))
 			if err != nil {
 				log.Fatal(err)
