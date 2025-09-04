@@ -26,17 +26,21 @@ func StartImports() {
 
 	fmt.Println("Starting imports...")
 
-	// chunks := getCSVFilepathChunks()
+	filepaths := getCSVChunksFilepath()
 
-	// var wg sync.WaitGroup
-	// for _, chunk := range chunks {
-	// 	wg.Add(1)
-	// 	go func(c string) {
-	// 		defer wg.Done()
-	// 		processCSV(c, 1500)
-	// 	}(chunk)
-	// }
-	// wg.Wait()
+	// insert dimension tables first
+	var wg sync.WaitGroup
+	for i := 0; i < len(filepaths)-1; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			batchInsertCSV(filepaths[i], 1500)
+		}()
+	}
+	wg.Wait()
+
+	// insert fact table last
+	batchInsertCSV(filepaths[len(filepaths)-1], 1500)
 
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
@@ -95,87 +99,87 @@ func SplitExcel() {
 
 		partnerSK, values := getPartnersSK(row)
 		if values != nil {
-			dimCsvRows["dim_partners"] = append(dimCsvRows["dim_partners"], values)
+			dimCsvRows[partnersTable] = append(dimCsvRows[partnersTable], values)
 		}
 		monthsChargeDatesSK, values := getMonthsChargeDatesSK(row)
 		if values != nil {
-			dimCsvRows["dim_months_charge_dates"] = append(dimCsvRows["dim_months_charge_dates"], values)
+			dimCsvRows[monthsChargeDatesTable] = append(dimCsvRows[monthsChargeDatesTable], values)
 		}
 		customersSK, values := getCustomersSK(row)
 		if values != nil {
-			dimCsvRows["dim_customers"] = append(dimCsvRows["dim_customers"], values)
+			dimCsvRows[customersTable] = append(dimCsvRows[customersTable], values)
 		}
 		metersSK, values := getMetersSK(row)
 		if values != nil {
-			dimCsvRows["dim_meters"] = append(dimCsvRows["dim_meters"], values)
+			dimCsvRows[metersTable] = append(dimCsvRows[metersTable], values)
 		}
 		productsSK, values := getProductsSK(row)
 		if values != nil {
-			dimCsvRows["dim_products"] = append(dimCsvRows["dim_products"], values)
+			dimCsvRows[productsTable] = append(dimCsvRows[productsTable], values)
 		}
 		skusSK, values := getSkusSK(row)
 		if values != nil {
-			dimCsvRows["dim_skus"] = append(dimCsvRows["dim_skus"], values)
+			dimCsvRows[skusTable] = append(dimCsvRows[skusTable], values)
 		}
 		publishersSK, values := getPublishersSK(row)
 		if values != nil {
-			dimCsvRows["dim_publishers"] = append(dimCsvRows["dim_publishers"], values)
+			dimCsvRows[publishersTable] = append(dimCsvRows[publishersTable], values)
 		}
 		subscriptionsSK, values := getSubscriptionsSK(row)
 		if values != nil {
-			dimCsvRows["dim_subscriptions"] = append(dimCsvRows["dim_subscriptions"], values)
+			dimCsvRows[subscriptionsTable] = append(dimCsvRows[subscriptionsTable], values)
 		}
 		resourceLocationsSK, values := getResourceLocationsSK(row)
 		if values != nil {
-			dimCsvRows["dim_resource_locations"] = append(dimCsvRows["dim_resource_locations"], values)
+			dimCsvRows[resourceLocationsTable] = append(dimCsvRows[resourceLocationsTable], values)
 		}
 		resourceGroupsSK, values := getResourceGroupsSK(row)
 		if values != nil {
-			dimCsvRows["dim_resource_groups"] = append(dimCsvRows["dim_resource_groups"], values)
+			dimCsvRows[resourceGroupsTable] = append(dimCsvRows[resourceGroupsTable], values)
 		}
 		servicesSK, values := getServicesSK(row)
 		if values != nil {
-			dimCsvRows["dim_services"] = append(dimCsvRows["dim_services"], values)
+			dimCsvRows[servicesTable] = append(dimCsvRows[servicesTable], values)
 		}
 		chargeTypesSK, values := getChargeTypesSK(row)
 		if values != nil {
-			dimCsvRows["dim_charge_types"] = append(dimCsvRows["dim_charge_types"], values)
+			dimCsvRows[chargeTypesTable] = append(dimCsvRows[chargeTypesTable], values)
 		}
 		unitTypesSK, values := getUnitTypesSK(row)
 		if values != nil {
-			dimCsvRows["dim_unit_types"] = append(dimCsvRows["dim_unit_types"], values)
+			dimCsvRows[unitTypesTable] = append(dimCsvRows[unitTypesTable], values)
 		}
 		entitlementsSK, values := getEntitlementsSK(row)
 		if values != nil {
-			dimCsvRows["dim_entitlements"] = append(dimCsvRows["dim_entitlements"], values)
+			dimCsvRows[entitlementsTable] = append(dimCsvRows[entitlementsTable], values)
 		}
 		partnerCreditsSK, values := getPartnerCreditsSK(row)
 		if values != nil {
-			dimCsvRows["dim_partner_credits"] = append(dimCsvRows["dim_partner_credits"], values)
+			dimCsvRows[partnerCreditsTable] = append(dimCsvRows[partnerCreditsTable], values)
 		}
 		benefitsSK, values := getBenefitsSK(row)
 		if values != nil {
-			dimCsvRows["dim_benefits"] = append(dimCsvRows["dim_benefits"], values)
+			dimCsvRows[benefitsTable] = append(dimCsvRows[benefitsTable], values)
 		}
 		benefitOrdersSK, values := getBenefitOrdersSK(row)
 		if values != nil {
-			dimCsvRows["dim_benefit_orders"] = append(dimCsvRows["dim_benefit_orders"], values)
+			dimCsvRows[benefitOrdersTable] = append(dimCsvRows[benefitOrdersTable], values)
 		}
 		availabilitySK, values := getAvailabilitySK(row)
 		if values != nil {
-			dimCsvRows["dim_availability"] = append(dimCsvRows["dim_availability"], values)
+			dimCsvRows[availabilitiesTable] = append(dimCsvRows[availabilitiesTable], values)
 		}
 		usageDatesSK, values := getUsageDatesSK(row)
 		if values != nil {
-			dimCsvRows["dim_usage_dates"] = append(dimCsvRows["dim_usage_dates"], values)
+			dimCsvRows[usageDatesTable] = append(dimCsvRows[usageDatesTable], values)
 		}
 		billingCurrenciesSK, values := getBillingCurrenciesSK(row)
 		if values != nil {
-			dimCsvRows["dim_billing_currencies"] = append(dimCsvRows["dim_billing_currencies"], values)
+			dimCsvRows[billingCurrenciesTable] = append(dimCsvRows[billingCurrenciesTable], values)
 		}
 		pricingCurrenciesSK, values := getPricingCurrenciesSK(row)
 		if values != nil {
-			dimCsvRows["dim_pricing_currencies"] = append(dimCsvRows["dim_pricing_currencies"], values)
+			dimCsvRows[pricingCurrenciesTable] = append(dimCsvRows[pricingCurrenciesTable], values)
 		}
 
 		resourceUri := row[resourceUriIndex]
@@ -238,7 +242,7 @@ func SplitExcel() {
 		go func() {
 			defer wg.Done()
 			fmt.Printf("Writing %s with %d rows...\n", tableName, len(rows))
-			dimFile, err := os.Create(getCSVFilepath(tableName))
+			dimFile, err := os.Create(getCSVFilepath(string(tableName)))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -292,7 +296,7 @@ func getCSVFilepath(name string) string {
 	return filepath.Join(chunksDir, dataFile)
 }
 
-func getCSVFilepathChunks() []string {
+func getCSVChunksFilepath() []string {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("could not get current file path")
