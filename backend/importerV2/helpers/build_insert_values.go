@@ -65,7 +65,6 @@ func parseDate(s string) (time.Time, bool) {
 	return time.Time{}, false
 }
 
-// escapa aspas simples dentro da string
 func escapeString(s string) string {
 	return strings.ReplaceAll(s, "'", "''")
 }
