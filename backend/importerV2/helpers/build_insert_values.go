@@ -28,7 +28,9 @@ func BuildInsertValues(values []string, cols int) string {
 				str.WriteString(t.Format("2006-01-02 15:04:05"))
 				str.WriteString("'")
 			} else {
-				str.WriteString("'" + escapeString(val) + "'")
+				str.WriteString("'")
+				str.WriteString(val)
+				str.WriteString("'")
 			}
 
 			if j != cols-1 {
@@ -63,8 +65,4 @@ func parseDate(s string) (time.Time, bool) {
 		}
 	}
 	return time.Time{}, false
-}
-
-func escapeString(s string) string {
-	return strings.ReplaceAll(s, "'", "''")
 }
